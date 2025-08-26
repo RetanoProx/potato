@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import './TimerApp.css';
+import TimerApp from './TimerApp';
 
 function App() {
   return (
     <div>
-      <h1>Hello, World!</h1>
-      <p>Frontend is running</p>
+      <TimerApp />
     </div>
   );
 }
