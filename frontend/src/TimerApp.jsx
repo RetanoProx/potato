@@ -77,8 +77,7 @@ const TimerApp = () => {
           {notes.map((note, index) => (
             <div key={index} className="note">
               <p>🚩 {formatTime(note.time)}</p>
-              <input
-                type="text"
+              <textarea
                 placeholder="Add a note"
                 value={note.text}
                 onChange={(e) => handleNoteChange(index, e.target.value)}
