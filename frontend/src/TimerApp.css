@@ -1,6 +1,7 @@
 body {
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  /* background: linear-gradient(135deg, #f5f7fa, #c3cfe2); */
+  background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
   margin: 0;
   padding: 0;
   display: flex;

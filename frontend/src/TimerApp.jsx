@@ -54,10 +54,17 @@ const TimerApp = () => {
     });
   };
 
+  const formatTime = (totalSeconds) => {
+    const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+    const seconds = String(totalSeconds % 60).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  };
+
   return (
     <div className="app-container">
       <div className="top-container">
-        <h1>{time}</h1>
+        <h1>{formatTime(time)}</h1>
         <div className="button-container">
           <button onClick={handleStart} disabled={isRunning}>Start</button>
           <button onClick={handleStop} disabled={!isRunning}>Stop</button>
@@ -65,19 +72,21 @@ const TimerApp = () => {
           <button onClick={handleAddNote} disabled={!isRunning}>Add</button>
         </div>
       </div>
-      <div className="bottom-container">
-        {notes.map((note, index) => (
-          <div key={index} className="note">
-            <p>Time: {note.time} seconds</p>
-            <input
-              type="text"
-              placeholder="Введите заметку"
-              value={note.text}
-              onChange={(e) => handleNoteChange(index, e.target.value)}
-            />
-          </div>
-        ))}
-      </div>
+      {notes.length > 0 && (
+        <div className="bottom-container">
+          {notes.map((note, index) => (
+            <div key={index} className="note">
+              <p>Time: {formatTime(note.time)}</p>
+              <input
+                type="text"
+                placeholder="Add a note"
+                value={note.text}
+                onChange={(e) => handleNoteChange(index, e.target.value)}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
