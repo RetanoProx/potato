@@ -76,7 +76,7 @@ const TimerApp = () => {
         <div className="bottom-container">
           {notes.map((note, index) => (
             <div key={index} className="note">
-              <p>Time: {formatTime(note.time)}</p>
+              <p>🚩 {formatTime(note.time)}</p>
               <input
                 type="text"
                 placeholder="Add a note"
