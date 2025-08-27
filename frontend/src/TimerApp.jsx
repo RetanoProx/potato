@@ -1,41 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './TimerApp.css';
 
 const TimerApp = () => {
-  const [startTime, setStartTime] = useState(null);
-  const [elapsedTime, setElapsedTime] = useState(0);
+  const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [notes, setNotes] = useState([]);
+  const bottomContainerRef = useRef(null);
 
   useEffect(() => {
-    let animationFrameId;
-
-    const updateElapsedTime = () => {
-      if (isRunning && startTime) {
-        setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
-      }
-      animationFrameId = requestAnimationFrame(updateElapsedTime);
-    };
-
+    let timer;
     if (isRunning) {
-      animationFrameId = requestAnimationFrame(updateElapsedTime);
+      timer = setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
+      }, 1000);
+    } else {
+      clearInterval(timer);
     }
-
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [isRunning, startTime]);
+    return () => clearInterval(timer);
+  }, [isRunning]);
 
   useEffect(() => {
-    const bottomContainer = document.querySelector('.bottom-container');
-    if (bottomContainer) {
-      bottomContainer.scrollTop = bottomContainer.scrollHeight;
+    if (bottomContainerRef.current) {
+      bottomContainerRef.current.scrollTop = bottomContainerRef.current.scrollHeight;
     }
   }, [notes]);
 
   const handleStart = () => {
-    if (!isRunning) {
-      setStartTime(Date.now() - elapsedTime * 1000);
-      setIsRunning(true);
-    }
+    setIsRunning(true);
   };
 
   const handleStop = () => {
@@ -44,15 +35,14 @@ const TimerApp = () => {
 
   const handleReset = () => {
     setIsRunning(false);
-    setElapsedTime(0);
-    setStartTime(null);
+    setTime(0);
     setNotes([]);
   };
 
   const handleAddNote = () => {
     setNotes((prevNotes) => [
       ...prevNotes,
-      { time: elapsedTime, text: '' },
+      { time, text: '' },
     ]);
   };
 
@@ -74,7 +64,7 @@ const TimerApp = () => {
   return (
     <div className="app-container">
       <div className="top-container">
-        <h1>{formatTime(elapsedTime)}</h1>
+        <h1>{formatTime(time)}</h1>
         <div className="button-container">
           <button onClick={handleStart} disabled={isRunning}>Start</button>
           <button onClick={handleStop} disabled={!isRunning}>Stop</button>
@@ -83,7 +73,7 @@ const TimerApp = () => {
         </div>
       </div>
       {notes.length > 0 && (
-        <div className="bottom-container">
+        <div className="bottom-container" ref={bottomContainerRef}>
           {notes.map((note, index) => (
             <div key={index} className="note">
               <p>🚩 {formatTime(note.time)}</p>

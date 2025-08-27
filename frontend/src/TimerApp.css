@@ -57,7 +57,7 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1rem;
-  width: calc(100% - 22px);
+  width: calc(100%);
   box-sizing: border-box; /* Ensure padding and border are included in width */
   resize: none; /* Disable manual resizing */
   overflow: hidden; /* Hide scrollbars */
@@ -75,8 +75,10 @@ textarea::placeholder {
 
 textarea:focus {
   outline: none;
-  border-color: #4caf50; /* Highlight border on focus */
-  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Subtle glow effect */
+  /* border-color: #4caf50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); */
+  border-color: #eec660; /* Highlight border on focus */
+  box-shadow: 0 0 5px #e6c164(76, 175, 80, 0.5); /* Subtle glow effect */
 }
 
 .app-container {
