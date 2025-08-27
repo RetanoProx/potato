@@ -1,6 +1,38 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './TimerApp.css';
 
+// Хук для авто-увеличения высоты textarea
+function useAutoResizeTextarea(value) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.style.height = "auto"; // сброс
+      ref.current.style.height = ref.current.scrollHeight + "px"; // новая высота
+    }
+  }, [value]);
+
+  return ref;
+}
+
+// Отдельный компонент для заметки
+function NoteItem({ note, index, onChange, formatTime }) {
+  const textareaRef = useAutoResizeTextarea(note.text);
+
+  return (
+    <div className="note">
+      <p>🚩 {formatTime(note.time)}</p>
+      <textarea
+        ref={textareaRef}
+        rows={1}
+        placeholder="Add a note"
+        value={note.text}
+        onChange={(e) => onChange(index, e.target.value)}
+      />
+    </div>
+  );
+}
+
 const TimerApp = () => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
@@ -88,14 +120,13 @@ const TimerApp = () => {
           onScroll={handleScroll}
         >
           {notes.map((note, index) => (
-            <div key={index} className="note">
-              <p>🚩 {formatTime(note.time)}</p>
-              <textarea
-                placeholder="Add a note"
-                value={note.text}
-                onChange={(e) => handleNoteChange(index, e.target.value)}
-              />
-            </div>
+            <NoteItem
+              key={index}
+              note={note}
+              index={index}
+              onChange={handleNoteChange}
+              formatTime={formatTime}
+            />
           ))}
         </div>
       )}

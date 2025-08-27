@@ -58,13 +58,13 @@ textarea {
   border-radius: 5px;
   font-size: 1rem;
   width: calc(100%);
-  box-sizing: border-box; /* Ensure padding and border are included in width */
+  box-sizing: border-box; 
   resize: none; /* Disable manual resizing */
   overflow: hidden; /* Hide scrollbars */
   background-color: #f9f9f9; /* Light background for better contrast */
   transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus effects */
   line-height: 1.5; /* Set line height for consistent spacing */
-  height: calc(1.5em + 20px); /* Adjust height to include padding */
+  min-height: 1.5em;
 }
 
 textarea::placeholder {
