@@ -19,7 +19,8 @@ h1 {
 }
 
 button {
-  background-color: #4caf50;
+  /* background-color: #4caf50; */
+  background-color: #eec660;
   color: black;
   border: none;
   padding: 8px 12px;
@@ -34,7 +35,8 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  /* background-color: #45a049; */
+  background-color: #e6c164;
 }
 
 button:disabled {
