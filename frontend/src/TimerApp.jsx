@@ -6,6 +6,7 @@ const TimerApp = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [notes, setNotes] = useState([]);
   const bottomContainerRef = useRef(null);
+  const isAutoScrollEnabled = useRef(true);
 
   useEffect(() => {
     let timer;
@@ -20,7 +21,7 @@ const TimerApp = () => {
   }, [isRunning]);
 
   useEffect(() => {
-    if (bottomContainerRef.current) {
+    if (isAutoScrollEnabled.current && bottomContainerRef.current) {
       bottomContainerRef.current.scrollTop = bottomContainerRef.current.scrollHeight;
     }
   }, [notes]);
@@ -44,6 +45,7 @@ const TimerApp = () => {
       ...prevNotes,
       { time, text: '' },
     ]);
+    isAutoScrollEnabled.current = true;
   };
 
   const handleNoteChange = (index, text) => {
@@ -52,6 +54,13 @@ const TimerApp = () => {
       updatedNotes[index].text = text;
       return updatedNotes;
     });
+  };
+
+  const handleScroll = () => {
+    if (bottomContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = bottomContainerRef.current;
+      isAutoScrollEnabled.current = scrollTop + clientHeight >= scrollHeight;
+    }
   };
 
   const formatTime = (totalSeconds) => {
@@ -73,7 +82,11 @@ const TimerApp = () => {
         </div>
       </div>
       {notes.length > 0 && (
-        <div className="bottom-container" ref={bottomContainerRef}>
+        <div
+          className="bottom-container"
+          ref={bottomContainerRef}
+          onScroll={handleScroll}
+        >
           {notes.map((note, index) => (
             <div key={index} className="note">
               <p>🚩 {formatTime(note.time)}</p>
