@@ -1,12 +1,14 @@
 import React from 'react';
-import './index.css';
+import ReactDOM from 'react-dom/client';
+import Calendar from './components/Calendar';
 
 function App() {
   return (
-    <div className="app">
-      <h1>App Connected to Backend</h1>
+    <div>
+      <Calendar />
     </div>
   );
 }
 
-export default App;
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);

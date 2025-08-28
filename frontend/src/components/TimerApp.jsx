@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './TimerApp.css';
+import '../timerApp.css';
 
 // Хук для авто-увеличения высоты textarea
 function useAutoResizeTextarea(value) {
@@ -21,7 +21,7 @@ function NoteItem({ note, index, onChange, formatTime }) {
 
   return (
     <div className="note">
-      <p>🚩 {formatTime(note.time)}</p>
+      <p> ⭐ {formatTime(note.time)}</p>
       <textarea
         ref={textareaRef}
         rows={1}
