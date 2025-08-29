@@ -1,12 +1,16 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import pool from "./db.js";
 
 dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// ---------------- API ----------------
 
 // Получить заметки за год
 app.get("/api/notes", async (req, res) => {
@@ -25,7 +29,6 @@ app.get("/api/notes", async (req, res) => {
       return res.status(500).json({ error: "Ошибка SQL запроса", details: sqlErr.message });
     }
 
-    // Возвращаем массив объектов { date: "YYYY-MM-DD", note: "..." }
     const notes = result.rows.map(row => ({
       date: row.date.toISOString().split("T")[0],
       note: row.note
@@ -59,5 +62,18 @@ app.post("/api/notes", async (req, res) => {
   }
 });
 
+// ---------------- Фронтенд ----------------
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Отдаём статические файлы из папки frontend/dist
+app.use(express.static(path.join(__dirname, "frontend", "dist")));
+
+// Для всех остальных маршрутов отдаём index.html (React Router)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+});
+
+// ---------------- Сервер ----------------
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Backend запущен на http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`✅ Backend + Frontend запущены на порту ${PORT}`));
