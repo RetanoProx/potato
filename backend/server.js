@@ -8,31 +8,36 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 📌 Получить заметки за год
+// Получить заметки за год
 app.get("/api/notes", async (req, res) => {
   try {
     const { year } = req.query;
     if (!year) return res.status(400).json({ error: "Укажите год" });
 
-    const result = await pool.query(
-      `SELECT date, note FROM notes WHERE EXTRACT(YEAR FROM date) = $1`,
-      [year]
-    );
+    let result;
+    try {
+      result = await pool.query(
+        `SELECT date, note FROM notes WHERE EXTRACT(YEAR FROM date) = $1`,
+        [year]
+      );
+    } catch (sqlErr) {
+      console.error("Ошибка SQL запроса:", sqlErr);
+      return res.status(500).json({ error: "Ошибка SQL запроса", details: sqlErr.message });
+    }
 
-    // Преобразуем в объект { "2025-01-12": "Заметка" }
     const notes = {};
-    result.rows.forEach((row) => {
+    result.rows.forEach(row => {
       notes[row.date.toISOString().split("T")[0]] = row.note;
     });
 
     res.json(notes);
   } catch (err) {
-    console.error("Ошибка при получении заметок:", err);
-    res.status(500).json({ error: "Ошибка сервера" });
+    console.error("Ошибка сервера при получении заметок:", err);
+    res.status(500).json({ error: "Ошибка сервера", details: err.message });
   }
 });
 
-// 📌 Добавить заметку
+// Добавить или обновить заметку
 app.post("/api/notes", async (req, res) => {
   try {
     const { date, note } = req.body;
@@ -49,7 +54,7 @@ app.post("/api/notes", async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     console.error("Ошибка при сохранении заметки:", err);
-    res.status(500).json({ error: "Ошибка сервера" });
+    res.status(500).json({ error: "Ошибка сервера", details: err.message });
   }
 });
 

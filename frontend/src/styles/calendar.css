@@ -1,0 +1,118 @@
+.calendar-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: 'Inter', sans-serif;
+  background-color: #fff;
+}
+
+.calendar-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #111827;
+}
+
+/* сетка месяцев */
+.year-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* адаптив */
+@media (max-width: 640px) {
+  .year-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0; /* убираем gap, будем использовать границы */
+    border-top: 1px solid #e5e7eb;
+    border-left: 1px solid #e5e7eb;
+  }
+
+  .calendar-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .month-name {
+    font-size: 0.9rem;
+  }
+
+  /* компактные ячейки и крупные цифры */
+  .day-cell {
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    font-size: 1.1rem;
+    font-weight: 400;
+  }
+
+  /* разделители: сетка с границами */
+  .month-block {
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.5rem;
+  }
+}
+
+
+/* блок месяца */
+.month-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.month-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #111827;
+  text-transform: capitalize;
+}
+
+/* сетка дней месяца */
+.month-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+/* заголовки дней недели */
+.weekday-header {
+  font-weight: 500;
+  color: #9ca3af;
+  font-size: 0.75rem;
+}
+
+/* обычный день */
+.day-cell {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 50%;
+  margin: 0 auto;
+  font-size: 0.8rem;
+  color: #111827;
+  transition: background 0.2s, color 0.2s;
+}
+
+.day-cell:hover {
+  background-color: #f3f4f6;
+}
+
+/* пустые ячейки */
+.day-cell.empty {
+  background: none;
+  cursor: default;
+}
+
+/* день с заметкой */
+.day-cell.note {
+  background-color: #3b82f6;
+  color: #fff;
+  font-weight: 600;
+}
