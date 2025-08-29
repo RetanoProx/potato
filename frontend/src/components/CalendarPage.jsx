@@ -1,24 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { fetchNotes } from "../api/notesApi";
+import YearSelector from "./YearSelector";
+import MonthGrid from "./MonthGrid";
 import MonthView from "./MonthView";
+import { fetchNotes } from "../api/notesApi";
 import "../styles/calendar.css";
 
-export default function CalendarPage() {
-  const [year] = useState(new Date().getFullYear());
-  const [notes, setNotes] = useState({});
+const CalendarPage = () => {
+  const currentYear = new Date().getFullYear();
+  const [year, setYear] = useState(currentYear);
+  const [notes, setNotes] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(null);
 
   useEffect(() => {
-    fetchNotes(year).then(setNotes).catch(console.error);
+    fetchNotes(year)
+      .then((data) => setNotes(data))
+      .catch((err) => console.error("Ошибка загрузки заметок", err));
   }, [year]);
 
   return (
     <div className="calendar-container">
-      <h1 className="calendar-title">{year}</h1>
-      <div className="year-grid">
-        {Array.from({ length: 12 }, (_, idx) => (
-          <MonthView key={idx} year={year} month={idx} notes={notes} />
-        ))}
-      </div>
+      <YearSelector year={year} setYear={setYear} />
+      {selectedMonth === null ? (
+        <MonthGrid
+          year={year}
+          notes={notes}
+          onSelectMonth={(m) => setSelectedMonth(m)}
+        />
+      ) : (
+        <MonthView
+          year={year}
+          month={selectedMonth}
+          notes={notes}
+          onClose={() => setSelectedMonth(null)}
+          onPrev={() => setSelectedMonth((m) => (m > 0 ? m - 1 : m))}
+          onNext={() => setSelectedMonth((m) => (m < 11 ? m + 1 : m))}
+        />
+      )}
     </div>
   );
-}
+};
+
+export default CalendarPage;

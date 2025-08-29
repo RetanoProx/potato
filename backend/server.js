@@ -25,10 +25,11 @@ app.get("/api/notes", async (req, res) => {
       return res.status(500).json({ error: "Ошибка SQL запроса", details: sqlErr.message });
     }
 
-    const notes = {};
-    result.rows.forEach(row => {
-      notes[row.date.toISOString().split("T")[0]] = row.note;
-    });
+    // Возвращаем массив объектов { date: "YYYY-MM-DD", note: "..." }
+    const notes = result.rows.map(row => ({
+      date: row.date.toISOString().split("T")[0],
+      note: row.note
+    }));
 
     res.json(notes);
   } catch (err) {

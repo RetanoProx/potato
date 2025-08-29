@@ -1,118 +1,136 @@
 .calendar-container {
-  max-width: 1000px;
-  margin: 0 auto;
+  max-width: 900px;
+  margin: auto;
   padding: 1rem;
-  font-family: 'Inter', sans-serif;
-  background-color: #fff;
+  font-family: sans-serif;
 }
 
-.calendar-title {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #111827;
+.year-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-/* сетка месяцев */
-.year-grid {
+.month-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 0.8rem;
 }
 
-/* адаптив */
-@media (max-width: 640px) {
-  .year-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0; /* убираем gap, будем использовать границы */
-    border-top: 1px solid #e5e7eb;
-    border-left: 1px solid #e5e7eb;
-  }
-
-  .calendar-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .month-name {
-    font-size: 0.9rem;
-  }
-
-  /* компактные ячейки и крупные цифры */
-  .day-cell {
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
-    font-size: 1.1rem;
-    font-weight: 400;
-  }
-
-  /* разделители: сетка с границами */
-  .month-block {
-    border-right: 1px solid #e5e7eb;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 0.5rem;
-  }
+.month-button {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(145deg, #f9fafb, #f3f4f6);
+  border: 1px solid #e5e7eb;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
+.month-button:hover {
+  background: white;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
 
-/* блок месяца */
-.month-block {
+.month-button:active {
+  transform: scale(0.97);
+}
+
+.month-button.highlighted {
+  border: 2px solid #3b82f6;
+  background: linear-gradient(145deg, #dbeafe, #bfdbfe);
+  color: #1d4ed8;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+}
+
+.month-view {
+  margin-top: 1rem;
+}
+
+.month-header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+}
+
+/* Кнопки: стрелочки + назад */
+.year-selector button,
+.month-header button,
+.close-btn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.6rem;
+  border: 1px solid #e5e7eb;
+  background: linear-gradient(145deg, #f9fafb, #f3f4f6);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.year-selector button:hover,
+.month-header button:hover,
+.close-btn:hover {
+  background: white;
+  border-color: #cbd5e1;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.year-selector button:active,
+.month-header button:active,
+.close-btn:active {
+  transform: scale(0.96);
+}
+
+.days-of-week, .days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+
+.day-name {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.day-cell {
+  padding: 0.5rem;
+  border: 1px solid #eee;
+  min-height: 40px;
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
-.month-name {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #111827;
-  text-transform: capitalize;
+.day-cell.with-note {
+  background: #dbeafe;
+  border-color: #3b82f6;
+  font-weight: bold;
 }
 
-/* сетка дней месяца */
-.month-days-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.25rem;
-  text-align: center;
-  font-size: 0.8rem;
+.close-btn {
+  margin-top: 1rem;
 }
 
-/* заголовки дней недели */
-.weekday-header {
-  font-weight: 500;
-  color: #9ca3af;
-  font-size: 0.75rem;
-}
+/* Адаптивность */
+@media (max-width: 640px) {
+  .month-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-/* обычный день */
-.day-cell {
-  width: 32px;
-  height: 32px;
-  line-height: 32px;
-  border-radius: 50%;
-  margin: 0 auto;
-  font-size: 0.8rem;
-  color: #111827;
-  transition: background 0.2s, color 0.2s;
-}
-
-.day-cell:hover {
-  background-color: #f3f4f6;
-}
-
-/* пустые ячейки */
-.day-cell.empty {
-  background: none;
-  cursor: default;
-}
-
-/* день с заметкой */
-.day-cell.note {
-  background-color: #3b82f6;
-  color: #fff;
-  font-weight: 600;
+  .day-cell {
+    min-height: 30px;
+    font-size: 1.1rem;
+  }
 }
