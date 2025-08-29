@@ -11,23 +11,15 @@ app.use(cors());
 app.use(express.json());
 
 // ---------------- API ----------------
-
-// Получить заметки за год
 app.get("/api/notes", async (req, res) => {
   try {
     const { year } = req.query;
     if (!year) return res.status(400).json({ error: "Укажите год" });
 
-    let result;
-    try {
-      result = await pool.query(
-        `SELECT date, note FROM notes WHERE EXTRACT(YEAR FROM date) = $1`,
-        [year]
-      );
-    } catch (sqlErr) {
-      console.error("Ошибка SQL запроса:", sqlErr);
-      return res.status(500).json({ error: "Ошибка SQL запроса", details: sqlErr.message });
-    }
+    const result = await pool.query(
+      `SELECT date, note FROM notes WHERE EXTRACT(YEAR FROM date) = $1`,
+      [year]
+    );
 
     const notes = result.rows.map(row => ({
       date: row.date.toISOString().split("T")[0],
@@ -41,13 +33,10 @@ app.get("/api/notes", async (req, res) => {
   }
 });
 
-// Добавить или обновить заметку
 app.post("/api/notes", async (req, res) => {
   try {
     const { date, note } = req.body;
-    if (!date || !note) {
-      return res.status(400).json({ error: "Нужны date и note" });
-    }
+    if (!date || !note) return res.status(400).json({ error: "Нужны date и note" });
 
     await pool.query(
       `INSERT INTO notes (date, note) VALUES ($1, $2)
@@ -66,12 +55,10 @@ app.post("/api/notes", async (req, res) => {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Отдаём статические файлы из папки frontend/dist
-app.use(express.static(path.join(__dirname, "frontend", "dist")));
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-// Для всех остальных маршрутов отдаём index.html (React Router)
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 // ---------------- Сервер ----------------
