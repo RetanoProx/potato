@@ -13,7 +13,10 @@ import cookieParser from "cookie-parser";
 dotenv.config();
 const app = express();
 app.use(cors({
-  origin: true,
+  origin: [
+    "http://localhost:5173", // для локальной разработки
+    "https://potato-bnbk.onrender.com" // для деплоя
+  ],
   credentials: true
 }));
 app.use(express.json());
