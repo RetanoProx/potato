@@ -29,13 +29,13 @@ const COOKIE_NAME = "auth_token";
 // Middleware для проверки авторизации
 function authMiddleware(req, res, next) {
   const token = req.cookies[COOKIE_NAME];
-  if (!token) return res.status(401).json({ error: "Не авторизован" });
+  if (!token) return res.status(401).json({ error: "Not authorized" });
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
   } catch (err) {
-    return res.status(401).json({ error: "Неверный токен" });
+    return res.status(401).json({ error: "Invalid token" });
   }
 }
 
@@ -45,7 +45,7 @@ function authMiddleware(req, res, next) {
 app.post("/api/register", async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ error: "Нужны email и пароль" });
+    if (!email || !password) return res.status(400).json({ error: "Email and password required" });
 
     const hashed = await bcrypt.hash(password, 10);
 
@@ -56,8 +56,8 @@ app.post("/api/register", async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    console.error("Ошибка регистрации:", err);
-    res.status(500).json({ error: "Ошибка сервера" });
+    console.error("Registration error:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
@@ -65,14 +65,14 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ error: "Нужны email и пароль" });
+    if (!email || !password) return res.status(400).json({ error: "Email and password required" });
 
     const result = await pool.query(`SELECT * FROM users WHERE email = $1`, [email]);
     const user = result.rows[0];
-    if (!user) return res.status(401).json({ error: "Неверные данные" });
+    if (!user) return res.status(401).json({ error: "Incorrect data" });
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ error: "Неверные данные" });
+    if (!match) return res.status(401).json({ error: "Incorrect data" });
 
     const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: "30d" });
 
@@ -85,8 +85,8 @@ app.post("/api/login", async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    console.error("Ошибка входа:", err);
-    res.status(500).json({ error: "Ошибка сервера" });
+    console.error("Login error:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
