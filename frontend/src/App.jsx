@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import AuthScreen from './auth/AuthScreen';
+import AuthScreen from './components/AuthScreen';
 
 function App() {
   return (
