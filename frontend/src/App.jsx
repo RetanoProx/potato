@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import CalendarPage from './components/CalendarPage';
+import AuthScreen from './auth/AuthScreen';
 
 function App() {
   return (
     <div>
-      <CalendarPage />
+      <AuthScreen />
     </div>
   );
 }
