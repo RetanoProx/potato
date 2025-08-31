@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import '../timerApp.css';
+import '../styles/Timer.css';
 
 // Хук для авто-увеличения высоты textarea
 function useAutoResizeTextarea(value) {

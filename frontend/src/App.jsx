@@ -1,14 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import AuthScreen from './components/AuthScreen';
+// App.jsx
+import React, { useState, useEffect } from "react";
+import AuthScreen from "./components/AuthScreen";
+import TimerApp from "./components/TimerApp";
 
 function App() {
+  const [user, setUser] = useState(null);
+
   return (
-    <div>
-      <AuthScreen />
-    </div>
+    <>
+      {user ? (
+        <TimerApp />
+      ) : (
+        <AuthScreen onLogin={setUser} />
+      )}
+    </>
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+export default App;

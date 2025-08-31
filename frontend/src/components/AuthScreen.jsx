@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from "react";
 import "../styles/auth.css";
 
-// Автоматический выбор API URL: локально или Render
+// убираем импорт App!
+// import App from "../App";
+
 const API_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000"
     : "https://potato-bnbk.onrender.com";
 
-export default function AuthScreen() {
-  const [mode, setMode] = useState("login"); // "login" или "register"
+export default function AuthScreen({ onLogin }) {
+  const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
 
-  // Проверка авторизации при загрузке
   useEffect(() => {
-    fetch(`${API_URL}/api/me`, {
-      credentials: "include",
-    })
-      .then(res => {
+    fetch(`${API_URL}/api/me`, { credentials: "include" })
+      .then((res) => {
         if (!res.ok) throw new Error("Not authorized");
         return res.json();
       })
-      .then(data => setUser(data.user))
+      .then((data) => onLogin(data.user)) // уведомляем App сразу, если есть токен
       .catch(() => setUser(null));
   }, []);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -37,7 +36,7 @@ export default function AuthScreen() {
       const res = await fetch(`${API_URL}/api/${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // важно для работы с куками
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
@@ -45,35 +44,17 @@ export default function AuthScreen() {
       if (!res.ok) throw new Error(data.error || "Error");
 
       if (mode === "register") {
-        // После регистрации сразу предлагаем логин
         setMode("login");
         alert("✅ Registration successful! Please log in.");
       } else {
-        setUser({ email });
+        onLogin({ email }); // уведомляем App о логине
       }
     } catch (err) {
       setError(err.message);
     }
   };
 
-  const handleLogout = async () => {
-    await fetch(`${API_URL}/api/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
-    setUser(null);
-  };
-
-  if (user) {
-    return (
-      <div className="auth-container">
-        <h2>Welcome, {user.email}!</h2>
-        <button className="btn" onClick={handleLogout}>
-          Log out
-        </button>
-      </div>
-    );
-  }
+  if (user) return null; // больше не рендерим App внутри AuthScreen
 
   return (
     <div className="auth-container">
@@ -83,14 +64,14 @@ export default function AuthScreen() {
           type="email"
           placeholder="Email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
         {error && <p className="error">{error}</p>}
