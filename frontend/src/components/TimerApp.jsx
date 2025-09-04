@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import CalendarButton from "./CalendarButton";
 import '../styles/timer.css';
 
 // Хук для авто-увеличения высоты textarea
@@ -104,33 +105,37 @@ const TimerApp = () => {
 
   return (
     <div className="app-container">
-      <div className="top-container">
-        <h1>{formatTime(time)}</h1>
-        <div className="button-container">
-          <button onClick={handleStart} disabled={isRunning}>Start</button>
-          <button onClick={handleStop} disabled={!isRunning}>Stop</button>
-          <button onClick={handleReset}>Reset</button>
-          <button onClick={handleAddNote} disabled={!isRunning}>Add</button>
-        </div>
-      </div>
-      {notes.length > 0 && (
-        <div
-          className="bottom-container"
-          ref={bottomContainerRef}
-          onScroll={handleScroll}
-        >
-          {notes.map((note, index) => (
-            <NoteItem
-              key={index}
-              note={note}
-              index={index}
-              onChange={handleNoteChange}
-              formatTime={formatTime}
-            />
-          ))}
-        </div>
-      )}
+  <div className="top-container">
+    <button className="calendar-button" onClick={() => alert("Settings clicked")}>
+      <CalendarButton />
+    </button>
+    <h1>{formatTime(time)}</h1>
+    <div className="button-container">
+      <button onClick={handleStart} disabled={isRunning}>Start</button>
+      <button onClick={handleStop} disabled={!isRunning}>Stop</button>
+      <button onClick={handleReset}>Reset</button>
+      <button onClick={handleAddNote} disabled={!isRunning}>Add</button>
     </div>
+  </div>
+  {notes.length > 0 && (
+    <div
+      className="bottom-container"
+      ref={bottomContainerRef}
+      onScroll={handleScroll}
+    >
+      {notes.map((note, index) => (
+        <NoteItem
+          key={index}
+          note={note}
+          index={index}
+          onChange={handleNoteChange}
+          formatTime={formatTime}
+        />
+      ))}
+    </div>
+  )}
+</div>
+
   );
 };
 
