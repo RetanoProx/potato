@@ -88,7 +88,7 @@ body {
 /* ------------------------- */
 
 .btn {
-  background: #f3f4f6;
+  background: rgba(255, 255, 255, 0.3);
   border: 1px solid #e5e7eb;
   color: #000000;
   padding: 12px;
@@ -105,7 +105,7 @@ body {
 }
 
 .btn:hover {
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
   border-color: #cbd5e1;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
   transform: translateY(-2px);
