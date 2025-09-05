@@ -1,3 +1,9 @@
+body {
+  display: flex;
+  justify-content: center; /* только по горизонтали */
+  align-items: flex-start; /* фиксируем вверх */
+}
+
 .calendar-container {
   max-width: 900px;
   margin: auto;
@@ -10,6 +16,7 @@
 }
 
 .year-selector {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,7 +32,7 @@
 }
 
 .month-button {
-  padding: 1rem;
+  padding: 0.8rem;
   border-radius: 0.75rem;
   background: #f3f4f6;
   border: 1px solid #e5e7eb;
@@ -107,8 +114,8 @@
 .day-cell {
   padding: 0.5rem;
   border: 1px solid #eee;
-  min-height: 30px;
-  min-width: 30px;
+  min-height: 35px;
+  min-width: 34.4px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -123,6 +130,30 @@
 .close-btn {
   margin-top: 1rem;
 }
+
+.back-button {
+  position: absolute;
+  right: 1px;
+  top: 50%;
+  margin-top: -1rem;
+  background-color: #eec660 !important;
+  border: none !important;
+  width: 2.92rem;
+  height: 2.05rem;
+  padding: 0px !important;
+}
+
+.back-button:hover {
+  background: #e6c164 !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+.center-content {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem; /* расстояние между ←, годом и → */
+}
+
 
 /* Адаптивность */
 @media (max-width: 640px) {
