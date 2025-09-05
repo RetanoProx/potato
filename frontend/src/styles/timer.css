@@ -8,7 +8,7 @@ body {
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
+  overflow-x: hidden; 
   overflow-y: hidden;
 }
 
@@ -18,7 +18,7 @@ h1 {
   margin-bottom: 20px;
 }
 
-button {
+.timer-button  {
   /* background-color: #4caf50; */
   background-color: #eec660;
   color: black;
@@ -34,12 +34,12 @@ button {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Very light shadow */
 }
 
-button:hover {
+.timer-button:hover {
   /* background-color: #45a049; */
   background-color: #e6c164;
 }
 
-button:disabled {
+.timer-button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
@@ -174,7 +174,7 @@ textarea:focus {
     font-size: 2rem;
   }
 
-  button {
+  .timer-button {
     padding: 8px 16px;
     font-size: 0.9rem;
   }

@@ -119,14 +119,14 @@ const TimerApp = () => {
         </button>
         <h1>{formatTime(time)}</h1>
         <div className="button-container">
-          <button onClick={handleStart} disabled={isRunning}>
+          <button className="timer-button" onClick={handleStart} disabled={isRunning}>
             Start
           </button>
-          <button onClick={handleStop} disabled={!isRunning}>
+          <button className="timer-button" onClick={handleStop} disabled={!isRunning}>
             Stop
           </button>
-          <button onClick={handleReset}>Reset</button>
-          <button onClick={handleAddNote} disabled={!isRunning}>
+          <button className="timer-button" onClick={handleReset}>Reset</button>
+          <button className="timer-button" onClick={handleAddNote} disabled={!isRunning}>
             Add
           </button>
         </div>
