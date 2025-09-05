@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import CalendarButton from "./CalendarButton";
-import '../styles/timer.css';
+import { useNavigate } from "react-router-dom";
+import "../styles/timer.css";
 
 // Хук для авто-увеличения высоты textarea
 function useAutoResizeTextarea(value) {
@@ -40,6 +41,11 @@ const TimerApp = () => {
   const [notes, setNotes] = useState([]);
   const bottomContainerRef = useRef(null);
   const isAutoScrollEnabled = useRef(true);
+  const navigate = useNavigate();
+
+  const handleGoToCalendar = () => {
+    navigate("/CalendarPage"); // меняем маршрут на CalendarPage
+  };
 
   useEffect(() => {
     let timer;
@@ -55,7 +61,8 @@ const TimerApp = () => {
 
   useEffect(() => {
     if (isAutoScrollEnabled.current && bottomContainerRef.current) {
-      bottomContainerRef.current.scrollTop = bottomContainerRef.current.scrollHeight;
+      bottomContainerRef.current.scrollTop =
+        bottomContainerRef.current.scrollHeight;
     }
   }, [notes]);
 
@@ -74,10 +81,7 @@ const TimerApp = () => {
   };
 
   const handleAddNote = () => {
-    setNotes((prevNotes) => [
-      ...prevNotes,
-      { time, text: '' },
-    ]);
+    setNotes((prevNotes) => [...prevNotes, { time, text: "" }]);
     isAutoScrollEnabled.current = true;
   };
 
@@ -91,51 +95,60 @@ const TimerApp = () => {
 
   const handleScroll = () => {
     if (bottomContainerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = bottomContainerRef.current;
+      const { scrollTop, scrollHeight, clientHeight } =
+        bottomContainerRef.current;
       isAutoScrollEnabled.current = scrollTop + clientHeight >= scrollHeight;
     }
   };
 
   const formatTime = (totalSeconds) => {
-    const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
-    const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
-    const seconds = String(totalSeconds % 60).padStart(2, '0');
+    const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+    const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(
+      2,
+      "0"
+    );
+    const seconds = String(totalSeconds % 60).padStart(2, "0");
     return `${hours}:${minutes}:${seconds}`;
   };
 
   return (
     <div className="app-container">
-  <div className="top-container">
-    <button className="calendar-button" onClick={() => alert("Settings clicked")}>
-      <CalendarButton />
-    </button>
-    <h1>{formatTime(time)}</h1>
-    <div className="button-container">
-      <button onClick={handleStart} disabled={isRunning}>Start</button>
-      <button onClick={handleStop} disabled={!isRunning}>Stop</button>
-      <button onClick={handleReset}>Reset</button>
-      <button onClick={handleAddNote} disabled={!isRunning}>Add</button>
+      <div className="top-container">
+        <button className="calendar-button" onClick={handleGoToCalendar}>
+          <CalendarButton />
+        </button>
+        <h1>{formatTime(time)}</h1>
+        <div className="button-container">
+          <button onClick={handleStart} disabled={isRunning}>
+            Start
+          </button>
+          <button onClick={handleStop} disabled={!isRunning}>
+            Stop
+          </button>
+          <button onClick={handleReset}>Reset</button>
+          <button onClick={handleAddNote} disabled={!isRunning}>
+            Add
+          </button>
+        </div>
+      </div>
+      {notes.length > 0 && (
+        <div
+          className="bottom-container"
+          ref={bottomContainerRef}
+          onScroll={handleScroll}
+        >
+          {notes.map((note, index) => (
+            <NoteItem
+              key={index}
+              note={note}
+              index={index}
+              onChange={handleNoteChange}
+              formatTime={formatTime}
+            />
+          ))}
+        </div>
+      )}
     </div>
-  </div>
-  {notes.length > 0 && (
-    <div
-      className="bottom-container"
-      ref={bottomContainerRef}
-      onScroll={handleScroll}
-    >
-      {notes.map((note, index) => (
-        <NoteItem
-          key={index}
-          note={note}
-          index={index}
-          onChange={handleNoteChange}
-          formatTime={formatTime}
-        />
-      ))}
-    </div>
-  )}
-</div>
-
   );
 };
 
