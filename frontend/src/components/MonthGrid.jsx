@@ -1,33 +1,28 @@
 import React from "react";
 
 const monthNames = [
-  "January","February","March","April","May","June","July","August","September","October","November","December"
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
 ];
 
-const MonthGrid = ({ year, notes, onSelectMonth }) => {
-  // получаем месяцы, где есть заметки
-  const monthsWithNotes = new Set(
-    notes.map((n) => new Date(n.date).getMonth())
-  );
-
-  const MonthButton = ({ name, highlighted, onClick }) => (
-    <button
-      className={`month-button ${highlighted ? "highlighted" : ""}`}
-      onClick={onClick}
-    >
-      {name}
-    </button>
+const MonthGrid = ({ year, sessions, onSelectMonth }) => {
+  // Считаем, в каких месяцах есть сессии
+  const monthsWithSessions = new Set(
+    sessions
+      .filter(s => new Date(s.session_date).getFullYear() === year)
+      .map(s => new Date(s.session_date).getMonth())
   );
 
   return (
     <div className="month-grid">
       {monthNames.map((name, i) => (
-        <MonthButton
+        <button
           key={i}
-          name={name}
-          highlighted={monthsWithNotes.has(i)}
+          className={`month-button ${monthsWithSessions.has(i) ? "highlighted" : ""}`}
           onClick={() => onSelectMonth(i)}
-        />
+        >
+          {name}
+        </button>
       ))}
     </div>
   );

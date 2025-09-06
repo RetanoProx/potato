@@ -12,13 +12,15 @@ import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
-app.use(cors({
-  origin: [
-    "http://localhost:5173", // для локальной разработки
-    "https://potato-bnbk.onrender.com" // для деплоя
-  ],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // для локальной разработки
+      "https://potato-bnbk.onrender.com", // для деплоя
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -44,7 +46,8 @@ function authMiddleware(req, res, next) {
 app.post("/api/register", async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ error: "Email and password required" });
+    if (!email || !password)
+      return res.status(400).json({ error: "Email and password required" });
 
     const hashed = await bcrypt.hash(password, 10);
 
@@ -64,22 +67,29 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ error: "Email and password required" });
+    if (!email || !password)
+      return res.status(400).json({ error: "Email and password required" });
 
-    const result = await pool.query(`SELECT * FROM users WHERE email = $1`, [email]);
+    const result = await pool.query(`SELECT * FROM users WHERE email = $1`, [
+      email,
+    ]);
     const user = result.rows[0];
     if (!user) return res.status(401).json({ error: "Incorrect data" });
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(401).json({ error: "Incorrect data" });
 
-    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: "30d" });
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      JWT_SECRET,
+      { expiresIn: "30d" }
+    );
 
     res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
       sameSite: "lax",
       secure: false,
-      maxAge: 1000 * 60 * 60 * 24 * 365
+      maxAge: 1000 * 60 * 60 * 24 * 365,
     });
 
     res.json({ success: true });
@@ -100,8 +110,9 @@ app.get("/api/me", authMiddleware, (req, res) => {
   res.json({ user: req.user });
 });
 
-
 // ---------------- SESSIONS API ----------------
+
+// Сохраняем сессию
 app.post("/api/sessions/save", authMiddleware, async (req, res) => {
   try {
     const { notes_text } = req.body;
@@ -110,13 +121,24 @@ app.post("/api/sessions/save", authMiddleware, async (req, res) => {
     }
 
     const result = await pool.query(
-      `INSERT INTO sessions (notes_text) VALUES ($1) RETURNING *`,
+      `INSERT INTO sessions (notes_text, session_date) VALUES ($1, NOW()) RETURNING *`,
       [notes_text]
     );
 
     res.json({ success: true, session: result.rows[0] });
   } catch (err) {
     console.error("Save session error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Получаем все сессии
+app.get("/api/sessions", authMiddleware, async (req, res) => {
+  try {
+    const result = await pool.query(`SELECT * FROM sessions ORDER BY session_date ASC`);
+    res.json({ sessions: result.rows });
+  } catch (err) {
+    console.error("Fetch sessions error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
@@ -133,4 +155,6 @@ app.get("*", (req, res) => {
 
 // ---------------- Сервер ----------------
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Backend + Frontend запущены на порту ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`✅ Backend + Frontend запущены на порту ${PORT}`)
+);
