@@ -8,7 +8,7 @@ body {
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-  overflow-x: hidden; 
+  overflow-x: hidden;
   overflow-y: hidden;
 }
 
@@ -18,7 +18,7 @@ h1 {
   margin-bottom: 20px;
 }
 
-.timer-button  {
+.timer-button {
   /* background-color: #4caf50; */
   background-color: #eec660;
   color: black;
@@ -58,7 +58,7 @@ textarea {
   border-radius: 5px;
   font-size: 1rem;
   width: calc(100%);
-  box-sizing: border-box; 
+  box-sizing: border-box;
   resize: none; /* Disable manual resizing */
   overflow: hidden; /* Hide scrollbars */
   background-color: #f9f9f9; /* Light background for better contrast */
@@ -102,10 +102,9 @@ textarea:focus {
   position: relative; /* нужно для абсолютного позиционирования кнопки */
 }
 /* ------------------------------ */
-.calendar-button {
+.calendar-button,
+.save-button {
   position: absolute;
-  top: 10px;
-  right: 10px;
   background: white;
   border: none;
   cursor: pointer;
@@ -116,9 +115,21 @@ textarea:focus {
   width: 43px;
 }
 
-.calendar-button:hover {
+.calendar-button {
+  top: 10px;
+  right: 10px;
+}
+
+.save-button {
+  top: 10px;
+  left: 10px;
+}
+
+.calendar-button:hover,
+.save-button:hover {
   background: #f0f0f0;
 }
+
 /* ------------------------------ */
 .button-container {
   display: flex;
@@ -135,11 +146,66 @@ textarea:focus {
 }
 
 .note {
+  position: relative;
+  background: #f7f7f7;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.note-buttons {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  gap: 4px;
+}
+
+.note-btn {
+  border: none;
+  border-radius: 4px;
+  width: 1.7rem;
+  height: 1.7rem;
+  cursor: pointer;
+  margin: 1px;
+}
+
+.note-btn.save {
   background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  margin-bottom: 15px;
+  border: none;
+  cursor: pointer;
+  border: 1px solid #197925;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s;
+}
+.note-btn.save:hover {
+  background: #f0f0f0;
+  box-shadow: 0 4px 8px rgb(25, 121, 37, 0.3);
+}
+.note-btn.edit {
+  background: white;
+  border: none;
+  cursor: pointer;
+  border: 1px solid #293df0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s;
+}
+.note-btn.edit:hover {
+  background: #f0f0f0;
+  box-shadow: 0 4px 8px rgb(41, 61, 240,  0.3);
+}
+
+.note-btn.delete {
+  background: white;
+  border: none;
+  cursor: pointer;
+  border: 1px solid #ff0000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s;
+}
+.note-btn.delete:hover {
+  background: #f0f0f0;
+  box-shadow: 0 4px 8px rgb(255, 0, 0, 0.3);
 }
 
 .note p {
