@@ -1,3 +1,4 @@
+// TimerApp.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/timer.css";
@@ -57,7 +58,6 @@ function NoteItem({
             onClick={() => onSave(index)}
             title="Сохранить"
           >
-            {/* галочка */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="14"
@@ -74,7 +74,6 @@ function NoteItem({
             onClick={() => onEdit(index)}
             title="Редактировать"
           >
-            {/* карандаш */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="14"
@@ -91,7 +90,6 @@ function NoteItem({
           onClick={() => onDelete(index)}
           title="Удалить"
         >
-          {/* крестик */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="14"
@@ -114,6 +112,21 @@ const TimerApp = () => {
   const bottomContainerRef = useRef(null);
   const isAutoScrollEnabled = useRef(true);
   const navigate = useNavigate();
+
+  // Определяем базовый URL для API:
+  // - используем import.meta.env.VITE_API_BASE если задан (Vite)
+  // - если dev на 5173 (локально) — подставляем http://localhost:5000
+  // - в продакшене оставляем относительный путь ''
+  const isDev5173 =
+    typeof window !== "undefined" &&
+    window.location.hostname === "localhost" &&
+    window.location.port === "5173";
+
+  const API_BASE =
+    (typeof import.meta !== "undefined" &&
+      import.meta.env &&
+      import.meta.env.VITE_API_BASE) ||
+    (isDev5173 ? "http://localhost:5000" : "");
 
   const handleGoToCalendar = () => navigate("/CalendarPage");
 
@@ -173,7 +186,47 @@ const TimerApp = () => {
     setNotes((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSaveSession = async () => {};
+  const handleSaveSession = async () => {
+    if (notes.length === 0) {
+      alert("Нет заметок для сохранения");
+      return;
+    }
+
+    // Фильтруем пустые тексты и собираем в нужный формат
+    const notesText = notes
+      .filter((n) => n.text && n.text.trim() !== "")
+      .map((note) => `${formatTime(note.time)} - ${note.text.trim()}`)
+      .join("\n");
+
+    if (!notesText) {
+      alert("Нечего сохранять (все заметки пустые)");
+      return;
+    }
+
+    const url = API_BASE ? `${API_BASE}/api/sessions/save` : "/api/sessions/save";
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ notes_text: notesText }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert("Сессия сохранена!");
+      } else {
+        console.error("Save session response:", data);
+        alert("Ошибка при сохранении: " + (data.error || res.statusText));
+      }
+    } catch (err) {
+      console.error("Ошибка сохранения:", err);
+      alert("Ошибка при сохранении на сервер");
+    }
+  };
 
   const formatTime = (totalSeconds) => {
     const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");

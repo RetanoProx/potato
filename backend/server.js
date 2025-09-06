@@ -22,8 +22,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// ---- auth helpers
-const JWT_SECRET = process.env.JWT_SECRET || "supersecret"; // задай в .env
+const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 const COOKIE_NAME = "auth_token";
 
 // Middleware для проверки авторизации
@@ -79,8 +78,8 @@ app.post("/api/login", async (req, res) => {
     res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
       sameSite: "lax",
-      secure: false, // в проде поставить true + https
-      maxAge: 1000 * 60 * 60 * 24 * 365 // 1 год
+      secure: false,
+      maxAge: 1000 * 60 * 60 * 24 * 365
     });
 
     res.json({ success: true });
@@ -99,6 +98,27 @@ app.post("/api/logout", (req, res) => {
 // проверка авторизации
 app.get("/api/me", authMiddleware, (req, res) => {
   res.json({ user: req.user });
+});
+
+
+// ---------------- SESSIONS API ----------------
+app.post("/api/sessions/save", authMiddleware, async (req, res) => {
+  try {
+    const { notes_text } = req.body;
+    if (!notes_text || notes_text.trim() === "") {
+      return res.status(400).json({ error: "No notes provided" });
+    }
+
+    const result = await pool.query(
+      `INSERT INTO sessions (notes_text) VALUES ($1) RETURNING *`,
+      [notes_text]
+    );
+
+    res.json({ success: true, session: result.rows[0] });
+  } catch (err) {
+    console.error("Save session error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 // ---------------- Фронтенд ----------------
