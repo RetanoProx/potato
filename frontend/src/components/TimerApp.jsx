@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import CalendarButton from "./CalendarButton";
 import { useNavigate } from "react-router-dom";
-import { appendNoteLines } from "../api/notesApi";
 import "../styles/timer.css";
 
 // Хук для авто-увеличения высоты textarea
@@ -175,26 +173,7 @@ const TimerApp = () => {
     setNotes((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSaveSession = async () => {
-    if (!notes.length) return;
-    const pad = (n) => String(n).padStart(2, "0");
-
-    const lines = notes.map((n) => {
-      const h = pad(Math.floor(n.time / 3600));
-      const m = pad(Math.floor((n.time % 3600) / 60));
-      const s = pad(n.time % 60);
-      return `${h}:${m}:${s} - ${n.text}`;
-    });
-
-    const today = new Date().toISOString().slice(0, 10);
-    try {
-      await appendNoteLines(today, lines);
-      alert("Session saved ✅");
-    } catch (err) {
-      console.error(err);
-      alert("Ошибка при сохранении ❌");
-    }
-  };
+  const handleSaveSession = async () => {};
 
   const formatTime = (totalSeconds) => {
     const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
@@ -206,6 +185,23 @@ const TimerApp = () => {
     return `${hours}:${minutes}:${seconds}`;
   };
 
+  // Встроенная кнопка календаря
+  const CalendarButton = () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="black"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 9H21M7 3V5M17 3V5M6 12H10V16H6V12ZM6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" />
+    </svg>
+  );
+
   return (
     <div className="app-container">
       <div className="top-container">
@@ -214,7 +210,15 @@ const TimerApp = () => {
           onClick={handleSaveSession}
           title="Сохранить сессию"
         >
-          <svg fill="#000000" viewBox="-6 -6 42.00 42.00" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="1.5"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M6.494 13.994c-.45 0-.67.547-.348.86l8 8c.188.186.488.195.686.02l9-8c.547-.44-.164-1.24-.664-.747l-8.648 7.685-7.666-7.666c-.095-.097-.224-.152-.36-.152zM14.5 2c.277 0 .5.223.5.5v18c0 .277-.223.5-.5.5s-.5-.223-.5-.5v-18c0-.277.223-.5.5-.5zM.5 22c-.276.004-.504.224-.5.5v4c0 .822.678 1.5 1.5 1.5h27c.822 0 1.5-.678 1.5-1.5v-4c.01-.66-1-.657-1 0v4c0 .286-.214.5-.5.5h-27c-.286 0-.5-.214-.5-.5v-4c.004-.282-.218-.504-.5-.5z"></path></g></svg>
+          <svg
+            fill="#000000"
+            viewBox="-6 -6 42.00 42.00"
+            xmlns="http://www.w3.org/2000/svg"
+            stroke="#000000"
+            strokeWidth="1.5"
+          >
+            <path d="M6.494 13.994c-.45 0-.67.547-.348.86l8 8c.188.186.488.195.686.02l9-8c.547-.44-.164-1.24-.664-.747l-8.648 7.685-7.666-7.666c-.095-.097-.224-.152-.36-.152zM14.5 2c.277 0 .5.223.5.5v18c0 .277-.223.5-.5.5s-.5-.223-.5-.5v-18c0-.277.223-.5.5-.5zM.5 22c-.276.004-.504.224-.5.5v4c0 .822.678 1.5 1.5 1.5h27c.822 0 1.5-.678 1.5-1.5v-4c.01-.66-1-.657-1 0v4c0 .286-.214.5-.5.5h-27c-.286 0-.5-.214-.5-.5v-4c.004-.282-.218-.504-.5-.5z"></path>
+          </svg>
         </button>
 
         <h1>{formatTime(time)}</h1>

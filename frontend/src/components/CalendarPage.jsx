@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import YearSelector from "./YearSelector";
 import MonthGrid from "./MonthGrid";
 import MonthView from "./MonthView";
-import { fetchNotes } from "../api/notesApi";
 import "../styles/calendar.css";
 
 const CalendarPage = () => {
@@ -10,12 +9,6 @@ const CalendarPage = () => {
   const [year, setYear] = useState(currentYear);
   const [notes, setNotes] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(null);
-
-  useEffect(() => {
-    fetchNotes(year)
-      .then((data) => setNotes(data))
-      .catch((err) => console.error("Ошибка загрузки заметок", err));
-  }, [year]);
 
   return (
     <div className="calendar-container">

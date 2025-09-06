@@ -10,7 +10,7 @@ function App() {
 
   return (
     <Routes>
-      {/* Если пользователь не авторизован → показываем AuthScreen */}
+
       <Route
         path="/"
         element={
@@ -18,13 +18,13 @@ function App() {
         }
       />
 
-      {/* Таймер-домашняя страница */}
+      
       <Route
         path="/timer"
         element={user ? <TimerApp /> : <Navigate to="/" />}
       />
 
-      {/* Страница CalendarPage */}
+      
       <Route
         path="/CalendarPage"
         element={user ? <CalendarPage /> : <Navigate to="/" />}
