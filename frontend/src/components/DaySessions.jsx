@@ -1,4 +1,6 @@
+// DaySessions.jsx
 import React, { useState } from "react";
+import "../styles/daySessions.css"; // новый файл CSS для стиля DaySessions
 
 const DaySessions = ({ date, sessions, onClose }) => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -8,39 +10,31 @@ const DaySessions = ({ date, sessions, onClose }) => {
   };
 
   return (
-    <div className="month-view">
+    <div className="day-sessions-view">
       <div className="month-header">
         <span>Sessions for {date.toDateString()}</span>
       </div>
 
       <div className="day-sessions-container">
         {sessions.map((s, i) => {
-          // session_time из БД: "20:57:34.026533" или аналогично
-          const [hours, minutes, seconds] = s.session_time.split(":");
-          const timeObj = new Date(date);
-          timeObj.setHours(parseInt(hours), parseInt(minutes), parseInt(seconds));
-
-          const displayTime = timeObj.toLocaleTimeString([], {
+          const time = new Date(`${date.toDateString()} ${s.session_time}`).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
-            second: "2-digit",
           });
 
           return (
-            <div key={i} className="day-session">
+            <div key={i} className="day-session-card">
               <button
-                className="session-btn"
+                className={`session-btn ${openIndex === i ? "active" : ""}`}
                 onClick={() => toggleSession(i)}
               >
-                {displayTime}
+                {time}
               </button>
-              {openIndex === i && (
-                <div className="session-content">
-                  {s.notes_text.split("\n").map((line, idx) => (
-                    <p key={idx}>{line}</p>
-                  ))}
-                </div>
-              )}
+              <div className={`session-content ${openIndex === i ? "open" : ""}`}>
+                {s.notes_text.split("\n").map((line, idx) => (
+                  <p key={idx}>{line}</p>
+                ))}
+              </div>
             </div>
           );
         })}

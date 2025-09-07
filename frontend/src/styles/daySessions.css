@@ -1,0 +1,52 @@
+/* daySessions.css */
+.day-sessions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.day-session-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.session-btn {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 0.6rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+}
+
+.session-btn:hover {
+  background: #e0f2fe;
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.25);
+}
+
+.session-btn.active {
+  background: #dbeafe;
+  border-color: #3b82f6;
+}
+
+.session-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 1rem;
+}
+
+.session-content.open {
+  max-height: 500px; /* достаточно для большинства заметок */
+  padding: 0.5rem 1rem;
+}
+
+.session-content p {
+  margin: 0.2rem 0;
+}
