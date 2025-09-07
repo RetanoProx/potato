@@ -79,16 +79,14 @@ app.post("/api/login", async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(401).json({ error: "Incorrect data" });
 
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      JWT_SECRET,
-      { expiresIn: "30d" }
-    );
+    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+      expiresIn: "30d",
+    });
 
     res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none", // для кросс-доменных запросов
+      secure: true, // обязательно для https
       maxAge: 1000 * 60 * 60 * 24 * 365,
     });
 
@@ -135,7 +133,9 @@ app.post("/api/sessions/save", authMiddleware, async (req, res) => {
 // Получаем все сессии
 app.get("/api/sessions", authMiddleware, async (req, res) => {
   try {
-    const result = await pool.query(`SELECT * FROM sessions ORDER BY session_date ASC`);
+    const result = await pool.query(
+      `SELECT * FROM sessions ORDER BY session_date ASC`
+    );
     res.json({ sessions: result.rows });
   } catch (err) {
     console.error("Fetch sessions error:", err);
