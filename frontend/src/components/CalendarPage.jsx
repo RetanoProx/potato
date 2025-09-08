@@ -4,6 +4,7 @@ import MonthGrid from "./MonthGrid";
 import MonthView from "./MonthView";
 import DaySessions from "./DaySessions";
 import "../styles/calendar.css";
+import { apiFetch } from "../api";
 
 const CalendarPage = () => {
   const currentYear = new Date().getFullYear();
@@ -13,20 +14,25 @@ const CalendarPage = () => {
   const [selectedDaySessions, setSelectedDaySessions] = useState(null);
 
   // Подгрузка всех сессий с сервера
-  useEffect(() => {
-    const fetchSessions = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/sessions", {
-          credentials: "include",
-        });
-        const data = await res.json();
-        setSessions(data.sessions || []);
-      } catch (err) {
-        console.error("Error fetching sessions:", err);
+ // поправь путь, если нужно
+
+useEffect(() => {
+  (async () => {
+    try {
+      const res = await apiFetch("/api/sessions");
+      if (res.status === 401) {
+        console.warn("Не авторизован");
+        setSessions([]); // <-- вместо l([])
+        return;
       }
-    };
-    fetchSessions();
-  }, []);
+      const m = await res.json();
+      setSessions(m.sessions || []); // <-- вместо l(m.sessions || [])
+    } catch (err) {
+      console.error("Error fetching sessions:", err);
+    }
+  })();
+}, []);
+
 
   return (
     <div className="calendar-container">
