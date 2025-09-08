@@ -151,6 +151,8 @@ textarea:focus {
   padding: 8px;
   margin-bottom: 8px;
   border-radius: 8px;
+  max-width: 324px;
+  overflow-wrap: break-word;
 }
 
 .note-buttons {
@@ -251,5 +253,20 @@ textarea:focus {
 
   .note {
     padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-container {
+    width: 270px;
+  }
+
+  .timer-button {
+    width: 63px;
+    margin: 1px;
+  }
+
+  .app-container {
+    width: 310px;
   }
 }

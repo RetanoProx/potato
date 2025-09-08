@@ -9,6 +9,8 @@
 .day-session-card {
   display: flex;
   flex-direction: column;
+  overflow-wrap: break-word;  
+  max-width: 366px;
 }
 
 .session-btn {

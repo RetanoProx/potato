@@ -12,60 +12,73 @@ const CalendarPage = () => {
   const [sessions, setSessions] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedDaySessions, setSelectedDaySessions] = useState(null);
+  const [view, setView] = useState("grid"); // "grid" | "month" | "day"
 
-  // Подгрузка всех сессий с сервера
- // поправь путь, если нужно
-
-useEffect(() => {
-  (async () => {
-    try {
-      const res = await apiFetch("/api/sessions");
-      if (res.status === 401) {
-        console.warn("Не авторизован");
-        setSessions([]); // <-- вместо l([])
-        return;
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await apiFetch("/api/sessions");
+        if (res.status === 401) {
+          console.warn("Не авторизован");
+          setSessions([]);
+          return;
+        }
+        const m = await res.json();
+        setSessions(m.sessions || []);
+      } catch (err) {
+        console.error("Error fetching sessions:", err);
       }
-      const m = await res.json();
-      setSessions(m.sessions || []); // <-- вместо l(m.sessions || [])
-    } catch (err) {
-      console.error("Error fetching sessions:", err);
-    }
-  })();
-}, []);
+    })();
+  }, []);
 
+  // Карта компонентов по виду
+  const views = {
+    grid: (
+      <MonthGrid
+        year={year}
+        sessions={sessions}
+        onSelectMonth={(m) => {
+          setSelectedMonth(m);
+          setView("month");
+        }}
+      />
+    ),
+    month: (
+      <MonthView
+        year={year}
+        month={selectedMonth}
+        sessions={sessions}
+        onClose={() => setView("grid")}
+        onPrev={() =>
+          setSelectedMonth((m) => (m > 0 ? m - 1 : m))
+        }
+        onNext={() =>
+          setSelectedMonth((m) => (m < 11 ? m + 1 : m))
+        }
+        onSelectDay={(date, daySessions) => {
+          setSelectedDaySessions({ date, sessions: daySessions });
+          setView("day");
+        }}
+      />
+    ),
+    day: selectedDaySessions && (
+      <DaySessions
+        date={selectedDaySessions.date}
+        sessions={selectedDaySessions.sessions}
+        onClose={() => setView("month")}
+      />
+    ),
+  };
 
   return (
     <div className="calendar-container">
-      <YearSelector year={year} setYear={setYear} />
-      {selectedDaySessions ? (
-        <DaySessions
-          date={selectedDaySessions.date}
-          sessions={selectedDaySessions.sessions}
-          onClose={() => setSelectedDaySessions(null)}
-        />
-      ) : selectedMonth === null ? (
-        <MonthGrid
-          year={year}
-          sessions={sessions}
-          onSelectMonth={(m) => setSelectedMonth(m)}
-        />
-      ) : (
-        <MonthView
-          year={year}
-          month={selectedMonth}
-          sessions={sessions}
-          onClose={() => setSelectedMonth(null)}
-          onPrev={() =>
-            setSelectedMonth((m) => (m > 0 ? m - 1 : m))
-          }
-          onNext={() =>
-            setSelectedMonth((m) => (m < 11 ? m + 1 : m))
-          }
-          onSelectDay={(date, daySessions) =>
-            setSelectedDaySessions({ date, sessions: daySessions })
-          }
-        />
+      {/* YearSelector показываем только в grid или month */}
+      {(view === "grid" || view === "month") && (
+        <YearSelector year={year} setYear={setYear} />
       )}
+
+      {/* Рендерим нужный вид */}
+      {views[view]}
     </div>
   );
 };
