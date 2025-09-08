@@ -19,7 +19,7 @@ const CalendarPage = () => {
       try {
         const res = await apiFetch("/api/sessions");
         if (res.status === 401) {
-          console.warn("Не авторизован");
+          console.warn("Not authorized");
           setSessions([]);
           return;
         }

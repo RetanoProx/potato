@@ -37,7 +37,7 @@ function NoteItem({
         <textarea
           ref={textareaRef}
           rows={1}
-          placeholder="Введите заметку"
+          placeholder="Enter a note"
           value={note.text}
           onChange={(e) => onChange(index, e.target.value)}
           onKeyDown={(e) => {
@@ -56,7 +56,7 @@ function NoteItem({
           <button
             className="note-btn save"
             onClick={() => onSave(index)}
-            title="Сохранить"
+            title="Save"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +72,7 @@ function NoteItem({
           <button
             className="note-btn edit"
             onClick={() => onEdit(index)}
-            title="Редактировать"
+            title="Edit"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +88,7 @@ function NoteItem({
         <button
           className="note-btn delete"
           onClick={() => onDelete(index)}
-          title="Удалить"
+          title="Delete"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -188,7 +188,7 @@ const TimerApp = () => {
 
   const handleSaveSession = async () => {
     if (notes.length === 0) {
-      alert("Нет заметок для сохранения");
+      alert("No notes to save");
       return;
     }
 
@@ -199,7 +199,7 @@ const TimerApp = () => {
       .join("\n");
 
     if (!notesText) {
-      alert("Нечего сохранять (все заметки пустые)");
+      alert("Nothing to save (all notes are empty)");
       return;
     }
 
@@ -217,14 +217,14 @@ const TimerApp = () => {
 
       const data = await res.json();
       if (res.ok && data.success) {
-        alert("Сессия сохранена!");
+        alert("Session saved!");
       } else {
         console.error("Save session response:", data);
-        alert("Ошибка при сохранении: " + (data.error || res.statusText));
+        alert("Error while saving: " + (data.error || res.statusText));
       }
     } catch (err) {
-      console.error("Ошибка сохранения:", err);
-      alert("Ошибка при сохранении на сервер");
+      console.error("Save error:", err);
+      alert("Error saving to server");
     }
   };
 
@@ -261,7 +261,7 @@ const TimerApp = () => {
         <button
           className="save-button"
           onClick={handleSaveSession}
-          title="Сохранить сессию"
+          title="Save session"
         >
           <svg
             fill="#000000"

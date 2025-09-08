@@ -114,13 +114,16 @@ app.get("/api/me", authMiddleware, (req, res) => {
 app.post("/api/sessions/save", authMiddleware, async (req, res) => {
   try {
     const { notes_text } = req.body;
-    if (!notes_text || notes_text.trim() === "") {
+    if (!notes_text) {
       return res.status(400).json({ error: "No notes provided" });
     }
 
+    // Берём email из авторизационного токена (authMiddleware кладёт decoded payload в req.user)
+    const email = req.user && req.user.email ? req.user.email : null;
+
     const result = await pool.query(
-      `INSERT INTO sessions (notes_text, session_date) VALUES ($1, NOW()) RETURNING *`,
-      [notes_text]
+      `INSERT INTO sessions (notes_text, session_date, email) VALUES ($1, NOW(), $2) RETURNING *`,
+      [notes_text, email]
     );
 
     res.json({ success: true, session: result.rows[0] });
@@ -130,11 +133,14 @@ app.post("/api/sessions/save", authMiddleware, async (req, res) => {
   }
 });
 
-// Получаем все сессии
+// Получаем все сессии (только для текущего пользователя)
 app.get("/api/sessions", authMiddleware, async (req, res) => {
   try {
+    const email = req.user && req.user.email ? req.user.email : null;
+
     const result = await pool.query(
-      `SELECT * FROM sessions ORDER BY session_date ASC`
+      `SELECT * FROM sessions WHERE email = $1 ORDER BY session_date ASC`,
+      [email]
     );
     res.json({ sessions: result.rows });
   } catch (err) {
