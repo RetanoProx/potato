@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../styles/auth.css";
 
-// убираем импорт App!
-// import App from "../App";
 
 const API_URL =
   window.location.hostname === "localhost"
@@ -22,7 +20,7 @@ export default function AuthScreen({ onLogin }) {
         if (!res.ok) throw new Error("Not authorized");
         return res.json();
       })
-      .then((data) => onLogin(data.user)) // уведомляем App сразу, если есть токен
+      .then((data) => onLogin(data.user)) // повідомляє App відразу, якщо є токен
       .catch(() => setUser(null));
   }, []);
 
@@ -47,14 +45,14 @@ export default function AuthScreen({ onLogin }) {
         setMode("login");
         alert("✅ Registration successful! Please log in.");
       } else {
-        onLogin({ email }); // уведомляем App о логине
+        onLogin({ email }); // повідомляє App про логін
       }
     } catch (err) {
       setError(err.message);
     }
   };
 
-  if (user) return null; // больше не рендерим App внутри AuthScreen
+  if (user) return null;
 
   return (
     <div className="auth-container">

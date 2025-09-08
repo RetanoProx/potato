@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const YearSelector = ({ year, setYear }) => {
   const currentYear = new Date().getFullYear();
-  const minYear = currentYear - 9; // последние 10 лет: [currentYear-9 ... currentYear]
+  const minYear = currentYear - 9; // останні 10 років: [currentYear-9 ... currentYear]
 
   const prevDisabled = year <= minYear;
   const nextDisabled = year >= currentYear;
@@ -28,7 +28,7 @@ const YearSelector = ({ year, setYear }) => {
         <button
           onClick={prevYear}
           disabled={prevDisabled}
-          aria-label="Предыдущий год"
+          aria-label="Попередній рік"
         >
           ←
         </button>
@@ -36,11 +36,11 @@ const YearSelector = ({ year, setYear }) => {
         <button
           onClick={nextYear}
           disabled={nextDisabled}
-          aria-label="Следующий год"
+          aria-label="Наступний рік"
         >
           →
         </button>
-        <button onClick={handleBack} className="back-button" aria-label="Назад к таймеру">
+        <button onClick={handleBack} className="back-button" aria-label="Назад до таймера">
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="22"

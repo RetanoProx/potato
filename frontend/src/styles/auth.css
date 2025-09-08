@@ -42,7 +42,7 @@ body {
   border: none;
   outline: none;
   background: rgba(255, 255, 255, 0.2);
-  color: #000000; /* текст пользователя черный */
+  color: #000000;
   font-size: 1rem;
   transition: all 0.3s ease;
   width: 100%;
@@ -55,26 +55,21 @@ body {
 .auth-form input:active {
   background: rgba(255, 255, 255, 0.3);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
-  color: #000000; /* текст пользователя черный */
-  -webkit-text-fill-color: #000000; /* вводимый текст и автозаполнение */
+  color: #000000; 
+  -webkit-text-fill-color: #000000;
 }
-
-/* Placeholder светлый всегда */
 .auth-form input::placeholder {
   color: rgba(255, 255, 255, 0.7);
-  -webkit-text-fill-color: rgba(255, 255, 255, 0.7); /* важно для Chrome */
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.7);
   transition: color 0.3s ease;
 }
 
-/* Placeholder не чернеет при hover/focus */
 .auth-form input:hover::placeholder,
 .auth-form input:focus::placeholder,
 .auth-form input:active::placeholder {
   color: rgba(255, 255, 255, 0.7);
   -webkit-text-fill-color: rgba(255, 255, 255, 0.7);
 }
-
-/* Автозаполнение Chrome/Edge */
 .auth-form input:-webkit-autofill,
 .auth-form input:-webkit-autofill:hover,
 .auth-form input:-webkit-autofill:focus,
@@ -98,7 +93,6 @@ body {
   font-size: 1rem;
   font-weight: 500;
   transition: background 0.3s ease, transform 0.15s ease;
-  /*----------- */
   white-space: nowrap;
   display: inline-flex;
   justify-content: center;
@@ -133,7 +127,7 @@ p {
   color: #ff0000;
 }
 
-/* Анимация появления */
+/* Анімація появи */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -145,10 +139,9 @@ p {
   }
 }
 
-/* 📱 Мобильная адаптация */
 @media (max-width: 768px) {
   body {
-    align-items: flex-start; /* чтобы контент мог скроллиться */
+    align-items: flex-start;
     padding: 15px;
   }
 

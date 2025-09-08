@@ -1,6 +1,5 @@
-// DaySessions.jsx
 import React, { useState } from "react";
-import "../styles/daySessions.css"; // новый файл CSS для стиля DaySessions
+import "../styles/daySessions.css"; 
 
 const DaySessions = ({ date, sessions, onClose }) => {
   const [openIndex, setOpenIndex] = useState(null);

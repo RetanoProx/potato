@@ -31,7 +31,7 @@ h1 {
   transition: background-color 0.3s, box-shadow 0.3s;
   flex-shrink: 1;
   width: 68px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Very light shadow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .timer-button:hover {
@@ -59,18 +59,18 @@ textarea {
   font-size: 1rem;
   width: calc(100%);
   box-sizing: border-box;
-  resize: none; /* Disable manual resizing */
-  overflow: hidden; /* Hide scrollbars */
-  background-color: #f9f9f9; /* Light background for better contrast */
-  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus effects */
-  line-height: 1.5; /* Set line height for consistent spacing */
+  resize: none; 
+  overflow: hidden; 
+  background-color: #f9f9f9; 
+  transition: border-color 0.3s, box-shadow 0.3s;
+  line-height: 1.5;
   min-height: 1.5em;
 }
 
 textarea::placeholder {
-  color: #999; /* Placeholder text color */
-  font-size: 1rem; /* Match font size of textarea */
-  line-height: 1.5; /* Ensure placeholder aligns with text */
+  color: #999; 
+  font-size: 1rem; 
+  line-height: 1.5; 
 }
 
 textarea:focus {
@@ -99,7 +99,7 @@ textarea:focus {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  position: relative; /* нужно для абсолютного позиционирования кнопки */
+  position: relative;
 }
 /* ------------------------------ */
 .calendar-button,

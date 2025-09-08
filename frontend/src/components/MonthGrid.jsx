@@ -6,7 +6,7 @@ const monthNames = [
 ];
 
 const MonthGrid = ({ year, sessions, onSelectMonth }) => {
-  // Считаем, в каких месяцах есть сессии
+  // Розраховує в яких місяцях є сесії
   const monthsWithSessions = new Set(
     sessions
       .filter(s => new Date(s.session_date).getFullYear() === year)

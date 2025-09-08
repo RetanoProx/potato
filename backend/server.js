@@ -15,7 +15,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // для локальной разработки
+      "http://localhost:5173", // для локальної розробки
       "https://potato-bnbk.onrender.com", // для деплоя
     ],
     credentials: true,
@@ -27,7 +27,7 @@ app.use(cookieParser());
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 const COOKIE_NAME = "auth_token";
 
-// Middleware для проверки авторизации
+// Middleware для перевірки авторизації
 function authMiddleware(req, res, next) {
   const token = req.cookies[COOKIE_NAME];
   if (!token) return res.status(401).json({ error: "Not authorized" });
@@ -42,7 +42,7 @@ function authMiddleware(req, res, next) {
 
 // ---------------- AUTH API ----------------
 
-// регистрация
+// регістрація
 app.post("/api/register", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -63,7 +63,7 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-// вход
+// вхід
 app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -85,8 +85,8 @@ app.post("/api/login", async (req, res) => {
 
     res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
-      sameSite: "none", // для кросс-доменных запросов
-      secure: true, // обязательно для https
+      sameSite: "none", // для міждоменних запитів
+      secure: true, // обов'язково для https
       maxAge: 1000 * 60 * 60 * 24 * 365,
     });
 
@@ -97,20 +97,20 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// выход
+// вихід
 app.post("/api/logout", (req, res) => {
   res.clearCookie(COOKIE_NAME);
   res.json({ success: true });
 });
 
-// проверка авторизации
+// перевірка авторизації
 app.get("/api/me", authMiddleware, (req, res) => {
   res.json({ user: req.user });
 });
 
 // ---------------- SESSIONS API ----------------
 
-// Сохраняем сессию
+// Збереження сесії
 app.post("/api/sessions/save", authMiddleware, async (req, res) => {
   try {
     const { notes_text } = req.body;
@@ -118,7 +118,7 @@ app.post("/api/sessions/save", authMiddleware, async (req, res) => {
       return res.status(400).json({ error: "No notes provided" });
     }
 
-    // Берём email из авторизационного токена (authMiddleware кладёт decoded payload в req.user)
+    // Бере email з авторизаційного токена (authMiddleware кладе decoded payload в req.user)
     const email = req.user && req.user.email ? req.user.email : null;
 
     const result = await pool.query(
@@ -133,7 +133,7 @@ app.post("/api/sessions/save", authMiddleware, async (req, res) => {
   }
 });
 
-// Получаем все сессии (только для текущего пользователя)
+// Отримує всі сесії (тільки для поточного користувача)
 app.get("/api/sessions", authMiddleware, async (req, res) => {
   try {
     const email = req.user && req.user.email ? req.user.email : null;

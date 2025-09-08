@@ -31,7 +31,7 @@ const CalendarPage = () => {
     })();
   }, []);
 
-  // Карта компонентов по виду
+  // Карта компонентів за видом
   const views = {
     grid: (
       <MonthGrid
@@ -72,12 +72,10 @@ const CalendarPage = () => {
 
   return (
     <div className="calendar-container">
-      {/* YearSelector показываем только в grid или month */}
       {(view === "grid" || view === "month") && (
         <YearSelector year={year} setYear={setYear} />
       )}
 
-      {/* Рендерим нужный вид */}
       {views[view]}
     </div>
   );

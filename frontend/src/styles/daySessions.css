@@ -1,4 +1,3 @@
-/* daySessions.css */
 .day-sessions-container {
   display: flex;
   flex-direction: column;
@@ -45,7 +44,7 @@
 }
 
 .session-content.open {
-  max-height: 500px; /* достаточно для большинства заметок */
+  max-height: 500px;
   padding: 0.5rem 1rem;
 }
 

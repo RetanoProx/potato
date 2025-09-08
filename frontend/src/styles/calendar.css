@@ -1,7 +1,7 @@
 body {
   display: flex;
-  justify-content: center; /* только по горизонтали */
-  align-items: flex-start; /* фиксируем вверх */
+  justify-content: center; 
+  align-items: flex-start; 
 }
 
 .calendar-container {
@@ -69,7 +69,7 @@ body {
   margin-bottom: 0.8rem;
 }
 
-/* Кнопки: стрелочки + назад */
+
 .year-selector button,
 .month-header button,
 .close-btn {
@@ -152,10 +152,9 @@ body {
 .center-content {
   display: flex;
   align-items: center;
-  gap: 0.4rem; /* расстояние между ←, годом и → */
+  gap: 0.4rem; 
 }
 
-/* Адаптивность */
 @media (max-width: 640px) {
   .month-grid {
     grid-template-columns: repeat(2, 1fr);

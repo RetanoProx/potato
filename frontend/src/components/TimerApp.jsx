@@ -1,9 +1,8 @@
-// TimerApp.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/timer.css";
 
-// Хук для авто-увеличения высоты textarea
+// Хук для автоматичного збільшення висоти textarea
 function useAutoResizeTextarea(value) {
   const ref = useRef(null);
 
@@ -17,7 +16,7 @@ function useAutoResizeTextarea(value) {
   return ref;
 }
 
-// Компонент заметки
+// Компонент нотатки
 function NoteItem({
   note,
   index,
@@ -113,10 +112,6 @@ const TimerApp = () => {
   const isAutoScrollEnabled = useRef(true);
   const navigate = useNavigate();
 
-  // Определяем базовый URL для API:
-  // - используем import.meta.env.VITE_API_BASE если задан (Vite)
-  // - если dev на 5173 (локально) — подставляем http://localhost:5000
-  // - в продакшене оставляем относительный путь ''
   const isDev5173 =
     typeof window !== "undefined" &&
     window.location.hostname === "localhost" &&
@@ -192,7 +187,7 @@ const TimerApp = () => {
       return;
     }
 
-    // Фильтруем пустые тексты и собираем в нужный формат
+    // Фільтрує порожні тексти і збирає в потрібний формат
     const notesText = notes
       .filter((n) => n.text && n.text.trim() !== "")
       .map((note) => `${formatTime(note.time)} - ${note.text.trim()}`)
@@ -238,7 +233,7 @@ const TimerApp = () => {
     return `${hours}:${minutes}:${seconds}`;
   };
 
-  // Встроенная кнопка календаря
+  // Вбудована кнопка календаря
   const CalendarButton = () => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
