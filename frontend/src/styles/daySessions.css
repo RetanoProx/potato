@@ -46,6 +46,7 @@
 .session-content.open {
   max-height: 500px;
   padding: 0.5rem 1rem;
+  background-image: url("https://www.transparenttextures.com/patterns/egg-shell.png");
 }
 
 .session-content p {
