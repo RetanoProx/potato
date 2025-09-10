@@ -31,6 +31,22 @@ const CalendarPage = () => {
     })();
   }, []);
 
+  // Функція для видалення сесії відразу на фронтенді
+  const handleDeleteSession = (sessionId) => {
+    // Видаляємо з глобального списку
+    setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+
+    // Якщо день відкритий, видаляє сесію з нього теж
+    if (selectedDaySessions) {
+      const filteredDaySessions = selectedDaySessions.sessions.filter(
+        (s) => s.id !== sessionId
+      );
+      setSelectedDaySessions((prev) =>
+        prev ? { ...prev, sessions: filteredDaySessions } : prev
+      );
+    }
+  };
+
   // Карта компонентів за видом
   const views = {
     grid: (
@@ -49,12 +65,8 @@ const CalendarPage = () => {
         month={selectedMonth}
         sessions={sessions}
         onClose={() => setView("grid")}
-        onPrev={() =>
-          setSelectedMonth((m) => (m > 0 ? m - 1 : m))
-        }
-        onNext={() =>
-          setSelectedMonth((m) => (m < 11 ? m + 1 : m))
-        }
+        onPrev={() => setSelectedMonth((m) => (m > 0 ? m - 1 : m))}
+        onNext={() => setSelectedMonth((m) => (m < 11 ? m + 1 : m))}
         onSelectDay={(date, daySessions) => {
           setSelectedDaySessions({ date, sessions: daySessions });
           setView("day");
@@ -66,6 +78,7 @@ const CalendarPage = () => {
         date={selectedDaySessions.date}
         sessions={selectedDaySessions.sessions}
         onClose={() => setView("month")}
+        onDelete={handleDeleteSession} // передає функцію видалення
       />
     ),
   };

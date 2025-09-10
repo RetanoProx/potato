@@ -1,11 +1,33 @@
 import React, { useState } from "react";
 import "../styles/daySessions.css"; 
+import { apiFetch } from "../api.js";
 
-const DaySessions = ({ date, sessions, onClose }) => {
+const DaySessions = ({ date, sessions, onClose, onDelete }) => {
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggleSession = (i) => {
     setOpenIndex(openIndex === i ? null : i);
+  };
+
+  const handleDeleteSession = async (sessionId, index) => {
+    if (!window.confirm("Are you sure you want to delete this session?")) return;
+
+    try {
+      const res = await apiFetch(`/api/sessions/${sessionId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        // відразу видаляє сесію зі стану батька
+        if (onDelete) onDelete(sessionId);
+        if (openIndex === index) setOpenIndex(null); // закриває картку
+      } else {
+        alert(data.error || "Error deleting session");
+      }
+    } catch (err) {
+      console.error("Error deleting session:", err);
+      alert("Error deleting session");
+    }
   };
 
   return (
@@ -22,7 +44,7 @@ const DaySessions = ({ date, sessions, onClose }) => {
           });
 
           return (
-            <div key={i} className="day-session-card">
+            <div key={s.id} className="day-session-card">
               <button
                 className={`session-btn ${openIndex === i ? "active" : ""}`}
                 onClick={() => toggleSession(i)}
@@ -33,6 +55,15 @@ const DaySessions = ({ date, sessions, onClose }) => {
                 {s.notes_text.split("\n").map((line, idx) => (
                   <p key={idx}>{line}</p>
                 ))}
+
+                {openIndex === i && (
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDeleteSession(s.id, i)}
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             </div>
           );

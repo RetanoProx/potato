@@ -51,3 +51,26 @@
 .session-content p {
   margin: 0.2rem 0;
 }
+
+.delete-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.delete-btn {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #fca5a5;
+  color: #fff;
+  border-color: #f87171;
+}

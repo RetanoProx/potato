@@ -176,7 +176,8 @@ textarea:focus {
   background: white;
   border: none;
   cursor: pointer;
-  border: 1px solid #197925;
+  /* border: 1px solid #197925; */
+
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s;
 }
@@ -188,7 +189,7 @@ textarea:focus {
   background: white;
   border: none;
   cursor: pointer;
-  border: 1px solid #293df0;
+  /* border: 1px solid #293df0; */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s;
 }
@@ -201,7 +202,7 @@ textarea:focus {
   background: white;
   border: none;
   cursor: pointer;
-  border: 1px solid #ff0000;
+  /* border: 1px solid #ff0000; */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s;
 }

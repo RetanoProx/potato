@@ -15,8 +15,8 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // для локальної розробки
-      "https://potato-bnbk.onrender.com", // для деплоя
+      "http://localhost:5173",
+      "https://potato-bnbk.onrender.com",
     ],
     credentials: true,
   })
@@ -85,9 +85,9 @@ app.post("/api/login", async (req, res) => {
 
     res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
-      sameSite: "none", // для міждоменних запитів
-      secure: true, // обов'язково для https
-      maxAge: 1000 * 60 * 60 * 24 * 365,
+      sameSite: "none",
+      secure: true,
+      maxAge: 2147483647 * 1000,
     });
 
     res.json({ success: true });
@@ -118,7 +118,6 @@ app.post("/api/sessions/save", authMiddleware, async (req, res) => {
       return res.status(400).json({ error: "No notes provided" });
     }
 
-    // Бере email з авторизаційного токена (authMiddleware кладе decoded payload в req.user)
     const email = req.user && req.user.email ? req.user.email : null;
 
     const result = await pool.query(
@@ -145,6 +144,30 @@ app.get("/api/sessions", authMiddleware, async (req, res) => {
     res.json({ sessions: result.rows });
   } catch (err) {
     console.error("Fetch sessions error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ---------------- Видалення сесії ----------------
+app.delete("/api/sessions/:id", authMiddleware, async (req, res) => {
+  try {
+    const sessionId = req.params.id;
+    const email = req.user && req.user.email ? req.user.email : null;
+
+    // Перевіряє, що сесія належить користувачеві
+    const result = await pool.query(
+      "SELECT * FROM sessions WHERE id = $1 AND email = $2",
+      [sessionId, email]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+
+    await pool.query("DELETE FROM sessions WHERE id = $1", [sessionId]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Delete session error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });

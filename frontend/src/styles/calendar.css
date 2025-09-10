@@ -119,6 +119,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #bcbcbc;
+  background-image: url("https://www.transparenttextures.com/patterns/egg-shell.png");
 }
 
 .day-cell.with-note {
@@ -161,8 +163,12 @@ body {
   }
 
   .day-cell {
-    min-height: 30px;
-    font-size: 1.1rem;
+    min-height: 26px;
+    min-width: 26px;
+  }
+
+  .calendar-container {
+    width: 348px;
   }
 }
 

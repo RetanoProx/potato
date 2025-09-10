@@ -61,7 +61,7 @@ function NoteItem({
               xmlns="http://www.w3.org/2000/svg"
               width="14"
               height="14"
-              fill="black"
+              fill="green"
               viewBox="0 0 24 24"
             >
               <path d="M20.285 6.709a1 1 0 010 1.414l-11 11a1 1 0 01-1.414 0l-5-5a1 1 0 111.414-1.414L9 16.586l10.293-10.293a1 1 0 011.414 0z" />
@@ -77,7 +77,7 @@ function NoteItem({
               xmlns="http://www.w3.org/2000/svg"
               width="14"
               height="14"
-              fill="black"
+              fill="blue"
               viewBox="0 0 24 24"
             >
               <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
@@ -93,7 +93,7 @@ function NoteItem({
             xmlns="http://www.w3.org/2000/svg"
             width="14"
             height="14"
-            fill="black"
+            fill="red"
             viewBox="0 0 24 24"
           >
             <path d="M18.3 5.71a1 1 0 00-1.41 0L12 10.59 7.11 5.7a1 1 0 00-1.41 1.42L10.59 12l-4.89 4.89a1 1 0 101.41 1.41L12 13.41l4.89 4.89a1 1 0 001.41-1.41L13.41 12l4.89-4.89a1 1 0 000-1.4z" />
