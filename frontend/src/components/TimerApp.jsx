@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/timer.css";
 
@@ -105,12 +105,18 @@ function NoteItem({
 }
 
 const TimerApp = () => {
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(0); // в секундах
   const [isRunning, setIsRunning] = useState(false);
   const [notes, setNotes] = useState([]);
   const bottomContainerRef = useRef(null);
   const isAutoScrollEnabled = useRef(true);
   const navigate = useNavigate();
+
+  // refs для точного відліку часу
+  // startTimeRef зберігає timestamp (ms) моменту останнього старту
+  const startTimeRef = useRef(null);
+  // accumulatedRef зберігає вже накопичені секунди до поточного запуску
+  const accumulatedRef = useRef(0);
 
   const isDev5173 =
     typeof window !== "undefined" &&
@@ -125,13 +131,64 @@ const TimerApp = () => {
 
   const handleGoToCalendar = () => navigate("/CalendarPage");
 
-  useEffect(() => {
-    let timer;
-    if (isRunning) {
-      timer = setInterval(() => setTime((prev) => prev + 1), 1000);
+  // Повертає поточний минулий час у секундах (точно, виходячи з Date.now() і рефів)
+  const getElapsedSeconds = useCallback(() => {
+    if (startTimeRef.current !== null) {
+      const diffMs = Date.now() - startTimeRef.current;
+      return accumulatedRef.current + Math.floor(diffMs / 1000);
     }
-    return () => clearInterval(timer);
-  }, [isRunning]);
+    return accumulatedRef.current;
+  }, []);
+
+  // Ефект стежить за isRunning і періодично оновлює state (інтервал тільки для оновлення UI)
+  useEffect(() => {
+    let timerId = null;
+
+    if (isRunning) {
+      // Оновлює відразу, щоб не чекати першого тіку
+      setTime(getElapsedSeconds());
+
+      // Інтервал 500ms — досить частий для UI, але не витрачає багато ресурсів.
+      timerId = setInterval(() => {
+        setTime(getElapsedSeconds());
+      }, 500);
+    } else {
+      // при зупинці синхронізує стан з накопиченим значенням
+      setTime(getElapsedSeconds());
+      if (timerId) {
+        clearInterval(timerId);
+      }
+    }
+
+    return () => {
+      if (timerId) clearInterval(timerId);
+    };
+  }, [isRunning, getElapsedSeconds]);
+
+  const handleStart = () => {
+    if (isRunning) return;
+    // ставить момент старту (ms) та запускаэ
+    startTimeRef.current = Date.now();
+    setIsRunning(true);
+  };
+
+  const handleStop = () => {
+    if (!isRunning) return;
+    // оновлює накопичення і зупиняємо
+    accumulatedRef.current = getElapsedSeconds();
+    startTimeRef.current = null;
+    setIsRunning(false);
+    // setTime(updated) відбудеться в ефекті, але можна синхронізуват одразу
+    setTime(accumulatedRef.current);
+  };
+
+  const handleReset = () => {
+    setIsRunning(false);
+    startTimeRef.current = null;
+    accumulatedRef.current = 0;
+    setTime(0);
+    setNotes([]);
+  };
 
   useEffect(() => {
     if (isAutoScrollEnabled.current && bottomContainerRef.current) {
@@ -140,16 +197,10 @@ const TimerApp = () => {
     }
   }, [notes]);
 
-  const handleStart = () => setIsRunning(true);
-  const handleStop = () => setIsRunning(false);
-  const handleReset = () => {
-    setIsRunning(false);
-    setTime(0);
-    setNotes([]);
-  };
-
   const handleAddNote = () => {
-    setNotes((prev) => [...prev, { time, text: "", isEditing: true }]);
+    // бере точний поточний час по getElapsedSeconds()
+    const noteTime = getElapsedSeconds();
+    setNotes((prev) => [...prev, { time: noteTime, text: "", isEditing: true }]);
     isAutoScrollEnabled.current = true;
   };
 
