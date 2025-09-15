@@ -90,7 +90,7 @@ textarea:focus {
   height: 100dvh;
   height: -webkit-fill-available; /* для iOS Safari до 16 */
   margin: 0;
-  overflow: hidden; /* запрещаем прокрутку всей страницы */
+  overflow: hidden; /* забороняємо прокрутку всієї сторінки */
 }
 
 .top-container {
@@ -145,9 +145,9 @@ textarea:focus {
 }
 
 .bottom-container {
-   /* занимает остаток */
-  overflow-y: auto; /* скролл только внутри */
-  min-height: 0; /* КЛЮЧ: не даём Safari растягивать */
+   /* займає залишок */
+  overflow-y: auto; /* скролл тількі всередині */
+  min-height: 0; /* КЛЮЧ: не дає Safari розтягувати */
   flex-grow: 1;
 }
 

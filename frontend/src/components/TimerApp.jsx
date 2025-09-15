@@ -71,15 +71,15 @@ const TimerApp = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [notes, setNotes] = useState([]);
   const bottomContainerRef = useRef(null);
-  const topContainerRef = useRef(null);          // <-- добавил для измерения высоты верхней части
-  const scrollAnchorRef = useRef(null);         // <-- добавил якорь для scrollIntoView
+  const topContainerRef = useRef(null);          // <-- вимірювання висоти верхньої частини
+  const scrollAnchorRef = useRef(null);         // <-- якір для scrollIntoView
   const isAutoScrollEnabled = useRef(true);
   const navigate = useNavigate();
 
   const startTimeRef = useRef(null);
   const accumulatedRef = useRef(0);
 
-  // высота, которую мы установим инлайн на bottom-container (px)
+  // висота інлайн на bottom-container (px)
   const [bottomHeightPx, setBottomHeightPx] = useState(null);
 
   const isDev5173 =
@@ -95,7 +95,7 @@ const TimerApp = () => {
 
   const handleGoToCalendar = () => navigate("/CalendarPage");
 
-  // Загрузка таймера и заметок из localStorage
+  // Завантаження таймера і нотаток з localStorage
   useEffect(() => {
     const savedStart = localStorage.getItem("timerStart");
     const savedAccum = localStorage.getItem("timerAccum");
@@ -115,7 +115,7 @@ const TimerApp = () => {
     });
   }, []);
 
-  // Сохранение таймера и заметок в localStorage
+  // Збереження таймера і нотаток в localStorage
   useEffect(() => {
     if (isRunning) {
       localStorage.setItem("timerStart", startTimeRef.current);
@@ -174,23 +174,23 @@ const TimerApp = () => {
     localStorage.removeItem("timerNotes");
   };
 
-  // Функция пересчёта доступной высоты для bottom-container
+  // Функція перерахунку доступної висоти для bottom-container
   const recalcBottomHeight = useCallback(() => {
     if (typeof window === "undefined") return;
 
-    // Используем visualViewport если есть (лучше для мобильных + клавиатуры)
+    // Використовує visualViewport, якщо є (краще для мобільних + клавіатури)
     const viewportH = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
     const topRect = topContainerRef.current?.getBoundingClientRect();
     const topBottom = topRect ? topRect.bottom : 0;
 
-    // небольшой отступ внизу чтобы не прилегало впритык (можешь подправить)
+    // невеликий відступ внизу, щоб не прилягало впритул
     const bottomPadding = 8;
 
     const available = Math.max(0, Math.floor(viewportH - topBottom - bottomPadding));
     setBottomHeightPx(available);
   }, []);
 
-  // Пересчёт высоты при mount / resize / visualViewport resize
+  // Перерахунок висоти при mount / resize / visualViewport resize
   useLayoutEffect(() => {
     recalcBottomHeight();
 
@@ -211,21 +211,21 @@ const TimerApp = () => {
     };
   }, [recalcBottomHeight]);
 
-  // Автоскролл при добавлении новых заметок
+  // Автоскрол при додаванні нових нотаток
   useEffect(() => {
-    // пересчитаем высоту — например при добавлении заметки layout поменялся
+    // перерахуємо висоту — наприклад при додаванні примітки layout змінився
     recalcBottomHeight();
 
-    // даём DOM время отрисоваться, затем скроллим к якорю
-    // requestAnimationFrame предпочтительнее setTimeout для плавной отрисовки
+    // дає DOM час для відображення, потім прокручує до якоря
+    // requestAnimationFrame краще за setTimeout для плавного відображення
     requestAnimationFrame(() => {
       if (isAutoScrollEnabled.current) {
         if (scrollAnchorRef.current) {
-          // плавный скролл к последнему элементу
+          // плавний скрол до останнього елемента
           try {
             scrollAnchorRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
           } catch (err) {
-            // в старых браузерах fallback
+            // у старих браузерах fallback
             if (bottomContainerRef.current) {
               bottomContainerRef.current.scrollTop = bottomContainerRef.current.scrollHeight;
             }
@@ -325,7 +325,6 @@ const TimerApp = () => {
 
   return (
     <div className="app-container">
-      {/* top-container — добавил ref для измерения */}
       <div className="top-container" ref={topContainerRef}>
         <button className="save-button" onClick={handleSaveSession} title="Save session">
           <svg fill="#000000" viewBox="-6 -6 42.00 42.00" xmlns="http://www.w3.org/2000/svg" stroke="#000000" strokeWidth="1.5">
@@ -365,7 +364,7 @@ const TimerApp = () => {
               isAutoScrollEnabled.current = scrollTop + clientHeight >= scrollHeight - 2;
             }
           }}
-          // выставляем вычисленную высоту инлайн — это решает проблему "контейнер растёт"
+          // виставляє обчислену висоту інлайн — це вирішує проблему «контейнер росте"
           style={bottomHeightPx ? { height: `${bottomHeightPx}px`, minHeight: 0, overflowY: "auto" } : { minHeight: 0, overflowY: "auto" }}
         >
           {notes.map((note, index) => (
@@ -381,7 +380,7 @@ const TimerApp = () => {
             />
           ))}
 
-          {/* Якорь для надёжного автоскролла */}
+          {/* Якір для надійного автоскролу */}
           <div ref={scrollAnchorRef} />
         </div>
       )}
