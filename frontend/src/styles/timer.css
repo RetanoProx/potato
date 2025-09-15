@@ -88,8 +88,9 @@ textarea:focus {
   flex-direction: column;
   height: 100vh;
   height: 100dvh;
-  height: -webkit-fill-available; /* Safari до iOS 16 */
+  height: -webkit-fill-available; /* для iOS Safari до 16 */
   margin: 0;
+  overflow: hidden; /* запрещаем прокрутку всей страницы */
 }
 
 .top-container {
@@ -104,6 +105,7 @@ textarea:focus {
   align-items: center;
   gap: 10px;
   position: relative;
+  flex-shrink: 0;
 }
 /* ------------------------------ */
 .calendar-button,
@@ -143,19 +145,21 @@ textarea:focus {
 }
 
 .bottom-container {
+   /* занимает остаток */
+  overflow-y: auto; /* скролл только внутри */
+  min-height: 0; /* КЛЮЧ: не даём Safari растягивать */
   flex-grow: 1;
-  overflow-y: auto;
-  padding: 20px;
-  background: #00000017;
 }
+
+
 
 .note {
   position: relative;
   background: #f7f7f7;
   padding: 8px;
-  margin-bottom: 8px;
+  margin-top: 8px;
   border-radius: 8px;
-  max-width: 324px;
+  max-width: 382px;
   overflow-wrap: break-word;
 }
 

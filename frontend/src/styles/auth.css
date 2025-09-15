@@ -12,13 +12,14 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 16px;
-  padding: 40px 30px;
+  padding: 1px 30px;
   width: 100%;
   max-width: 380px;
   text-align: center;
   color: #000000;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
   animation: fadeIn 0.6s ease-in-out;
+  margin-top: 20px;
 }
 
 .auth-container h2 {
@@ -140,13 +141,14 @@ p {
 
 @media (max-width: 768px) {
   body {
-    align-items: flex-start;
     padding: 15px;
   }
 
   .auth-container {
-    padding: 25px 20px;
+    padding: 1px 20px;
+    min-width: 280px;
     margin: auto;
+    width: 100%;
   }
 
   .auth-container h2 {
@@ -161,7 +163,9 @@ p {
 
 @media (max-width: 480px) {
   .auth-container {
-    padding: 20px 15px;
+    padding: 1px 15px;
+    min-width: 280px;
+    width: auto;
   }
 
   .auth-container h2 {

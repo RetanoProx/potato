@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/timer.css";
 
@@ -71,11 +71,16 @@ const TimerApp = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [notes, setNotes] = useState([]);
   const bottomContainerRef = useRef(null);
+  const topContainerRef = useRef(null);          // <-- добавил для измерения высоты верхней части
+  const scrollAnchorRef = useRef(null);         // <-- добавил якорь для scrollIntoView
   const isAutoScrollEnabled = useRef(true);
   const navigate = useNavigate();
 
   const startTimeRef = useRef(null);
   const accumulatedRef = useRef(0);
+
+  // высота, которую мы установим инлайн на bottom-container (px)
+  const [bottomHeightPx, setBottomHeightPx] = useState(null);
 
   const isDev5173 =
     typeof window !== "undefined" &&
@@ -169,11 +174,68 @@ const TimerApp = () => {
     localStorage.removeItem("timerNotes");
   };
 
-  useEffect(() => {
-    if (isAutoScrollEnabled.current && bottomContainerRef.current) {
-      bottomContainerRef.current.scrollTop = bottomContainerRef.current.scrollHeight;
+  // Функция пересчёта доступной высоты для bottom-container
+  const recalcBottomHeight = useCallback(() => {
+    if (typeof window === "undefined") return;
+
+    // Используем visualViewport если есть (лучше для мобильных + клавиатуры)
+    const viewportH = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    const topRect = topContainerRef.current?.getBoundingClientRect();
+    const topBottom = topRect ? topRect.bottom : 0;
+
+    // небольшой отступ внизу чтобы не прилегало впритык (можешь подправить)
+    const bottomPadding = 8;
+
+    const available = Math.max(0, Math.floor(viewportH - topBottom - bottomPadding));
+    setBottomHeightPx(available);
+  }, []);
+
+  // Пересчёт высоты при mount / resize / visualViewport resize
+  useLayoutEffect(() => {
+    recalcBottomHeight();
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", recalcBottomHeight);
+      if (window.visualViewport && window.visualViewport.addEventListener) {
+        window.visualViewport.addEventListener("resize", recalcBottomHeight);
+      }
     }
-  }, [notes]);
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", recalcBottomHeight);
+        if (window.visualViewport && window.visualViewport.removeEventListener) {
+          window.visualViewport.removeEventListener("resize", recalcBottomHeight);
+        }
+      }
+    };
+  }, [recalcBottomHeight]);
+
+  // Автоскролл при добавлении новых заметок
+  useEffect(() => {
+    // пересчитаем высоту — например при добавлении заметки layout поменялся
+    recalcBottomHeight();
+
+    // даём DOM время отрисоваться, затем скроллим к якорю
+    // requestAnimationFrame предпочтительнее setTimeout для плавной отрисовки
+    requestAnimationFrame(() => {
+      if (isAutoScrollEnabled.current) {
+        if (scrollAnchorRef.current) {
+          // плавный скролл к последнему элементу
+          try {
+            scrollAnchorRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+          } catch (err) {
+            // в старых браузерах fallback
+            if (bottomContainerRef.current) {
+              bottomContainerRef.current.scrollTop = bottomContainerRef.current.scrollHeight;
+            }
+          }
+        } else if (bottomContainerRef.current) {
+          bottomContainerRef.current.scrollTop = bottomContainerRef.current.scrollHeight;
+        }
+      }
+    });
+  }, [notes, recalcBottomHeight]);
 
   const handleAddNote = () => {
     const noteTime = getElapsedSeconds();
@@ -263,7 +325,8 @@ const TimerApp = () => {
 
   return (
     <div className="app-container">
-      <div className="top-container">
+      {/* top-container — добавил ref для измерения */}
+      <div className="top-container" ref={topContainerRef}>
         <button className="save-button" onClick={handleSaveSession} title="Save session">
           <svg fill="#000000" viewBox="-6 -6 42.00 42.00" xmlns="http://www.w3.org/2000/svg" stroke="#000000" strokeWidth="1.5">
             <path d="M6.494 13.994c-.45 0-.67.547-.348.86l8 8c.188.186.488.195.686.02l9-8c.547-.44-.164-1.24-.664-.747l-8.648 7.685-7.666-7.666c-.095-.097-.224-.152-.36-.152zM14.5 2c.277 0 .5.223.5.5v18c0 .277-.223.5-.5.5s-.5-.223-.5-.5v-18c0-.277.223-.5.5-.5zM.5 22c-.276.004-.504.224-.5.5v4c0 .822.678 1.5 1.5 1.5h27c.822 0 1.5-.678 1.5-1.5v-4c.01-.66-1-.657-1 0v4c0 .286-.214.5-.5.5h-27c-.286 0-.5-.214-.5-.5v-4c.004-.282-.218-.504-.5-.5z"></path>
@@ -293,12 +356,18 @@ const TimerApp = () => {
       </div>
 
       {notes.length > 0 && (
-        <div className="bottom-container" ref={bottomContainerRef} onScroll={() => {
-          if (bottomContainerRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = bottomContainerRef.current;
-            isAutoScrollEnabled.current = scrollTop + clientHeight >= scrollHeight;
-          }
-        }}>
+        <div
+          className="bottom-container"
+          ref={bottomContainerRef}
+          onScroll={() => {
+            if (bottomContainerRef.current) {
+              const { scrollTop, scrollHeight, clientHeight } = bottomContainerRef.current;
+              isAutoScrollEnabled.current = scrollTop + clientHeight >= scrollHeight - 2;
+            }
+          }}
+          // выставляем вычисленную высоту инлайн — это решает проблему "контейнер растёт"
+          style={bottomHeightPx ? { height: `${bottomHeightPx}px`, minHeight: 0, overflowY: "auto" } : { minHeight: 0, overflowY: "auto" }}
+        >
           {notes.map((note, index) => (
             <NoteItem
               key={index}
@@ -311,6 +380,9 @@ const TimerApp = () => {
               formatTime={formatTime}
             />
           ))}
+
+          {/* Якорь для надёжного автоскролла */}
+          <div ref={scrollAnchorRef} />
         </div>
       )}
     </div>
