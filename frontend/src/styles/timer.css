@@ -151,7 +151,23 @@ textarea:focus {
   flex-grow: 1;
 }
 
+.bottom-container::-webkit-scrollbar {
+  width: 8px;
+}
 
+.bottom-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+
+.bottom-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 8px;
+}
+
+.bottom-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 
 .note {
   position: relative;
