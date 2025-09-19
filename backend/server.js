@@ -24,7 +24,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
+const JWT_SECRET = process.env.JWT_SECRET;
 const COOKIE_NAME = "auth_token";
 
 // Middleware для перевірки авторизації
